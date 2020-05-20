@@ -47,11 +47,24 @@ def toggle_index_match_field(method):
 
 @app.callback(
     Output("manual-weights-form-wrapper", "className"),
-    [Input("match_method", "value")],
+    [Input("auto-weight", "value")],
 )
 def toggle_manual_weights_form(method):
     """ Hide/show field based on other values """
-    if method == "weight":
+    if method == 0:
+        return "visible"
+
+    return "hidden"
+
+
+
+@app.callback(
+    Output("manual-match-form-wrapper", "className"),
+    [Input("manual-match", "value")],
+)
+def toggle_manual_match_form(method):
+    """ Hide/show field based on other values """
+    if method == 1:
         return "visible"
 
     return "hidden"

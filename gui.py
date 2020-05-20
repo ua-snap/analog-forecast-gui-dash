@@ -10,6 +10,9 @@ import dash_html_components as html
 import dash_dangerously_set_inner_html as ddsih
 import luts
 
+# Used in some fields & copyright date
+current_year = datetime.now().year
+
 # For hosting
 path_prefix = os.getenv("REQUESTS_PATHNAME_PREFIX") or "/"
 
@@ -34,13 +37,13 @@ def wrap_in_section(content, section_classes="", container_classes="", div_class
     )
 
 
-def wrap_in_field(label, control):
+def wrap_in_field(label, control, className=""):
     """
     Returns the control wrapped
     in Bulma-friendly markup.
     """
     return html.Div(
-        className="field",
+        className="field " + className,
         children=[
             html.Label(label, className="label"),
             html.Div(className="control", children=control),
@@ -93,54 +96,43 @@ about = wrap_in_section(
     div_classes="content is-size-5",
 )
 
-
-analog_bbox_n = wrap_in_field(
-    "North", dcc.Input(id="analog_bbox_n", type="number", value=90)
-)
-analog_bbox_w = wrap_in_field(
-    "West", dcc.Input(id="analog_bbox_w", type="number", value=0)
-)
-analog_bbox_s = wrap_in_field(
-    "South", dcc.Input(id="analog_bbox_s", type="number", value=0)
-)
-analog_bbox_e = wrap_in_field(
-    "East", dcc.Input(id="analog_bbox_e", type="number", value=360)
-)
-
-analog_bbox_form = wrap_in_section(
-    [
-        html.H3("Spatial extent of analog search area", className="subtitle is-4"),
-        analog_bbox_n,
-        analog_bbox_w,
-        analog_bbox_s,
-        analog_bbox_e,
+analog_bbox_fields = html.Div(
+    children=[
+        wrap_in_field(
+            "North", dcc.Input(id="analog_bbox_n", type="number", value=90), "inline"
+        ),
+        wrap_in_field(
+            "West", dcc.Input(id="analog_bbox_w", type="number", value=0), "inline"
+        ),
+        wrap_in_field(
+            "South", dcc.Input(id="analog_bbox_s", type="number", value=0), "inline"
+        ),
+        wrap_in_field(
+            "East", dcc.Input(id="analog_bbox_e", type="number", value=360), "inline"
+        ),
     ]
 )
 
-forecast_bbox_n = wrap_in_field(
-    "North", dcc.Input(id="forecast_bbox_n", type="number", value=90)
-)
-forecast_bbox_w = wrap_in_field(
-    "West", dcc.Input(id="forecast_bbox_w", type="number", value=0)
-)
-forecast_bbox_s = wrap_in_field(
-    "South", dcc.Input(id="forecast_bbox_s", type="number", value=70)
-)
-forecast_bbox_e = wrap_in_field(
-    "East", dcc.Input(id="forecast_bbox_e", type="number", value=360)
-)
-
-forecast_bbox_form = wrap_in_section(
-    [
-        html.H3("Spatial extent of forecast", className="subtitle is-4"),
-        forecast_bbox_n,
-        forecast_bbox_w,
-        forecast_bbox_s,
-        forecast_bbox_e,
+forecast_bbox_fields = html.Div(
+    children=[
+        wrap_in_field(
+            "North", dcc.Input(id="forecast_bbox_n", type="number", value=90), "inline"
+        ),
+        wrap_in_field(
+            "West", dcc.Input(id="forecast_bbox_w", type="number", value=0), "inline"
+        ),
+        wrap_in_field(
+            "South", dcc.Input(id="forecast_bbox_s", type="number", value=70), "inline"
+        ),
+        wrap_in_field(
+            "East", dcc.Input(id="forecast_bbox_e", type="number", value=360), "inline"
+        ),
     ]
 )
+
 
 # TODO default these to moving window that makes sense
+# TODO these may suck for year/month entry without day
 analog_temporal_daterange = wrap_in_field(
     "Date range for analog search",
     dcc.DatePickerRange(
@@ -166,11 +158,7 @@ forecast_temporal_daterange = wrap_in_field(
 )
 
 temporal_range_form = wrap_in_section(
-    [
-        html.H3("Spatial extent of forecast", className="subtitle is-4"),
-        analog_temporal_daterange,
-        forecast_temporal_daterange,
-    ]
+    [html.H3("Spatial extent of forecast", className="subtitle is-4")]
 )
 
 forecast_theme_control = wrap_in_field(
@@ -185,44 +173,24 @@ forecast_theme_control = wrap_in_field(
     ),
 )
 
-# TODO it looks like this field is only needed when
-# "height" or "temp" forecast themes are used, and
-# while the old interface had two drop-down, I think
-# they weren't used in tandem.  Validate.
-# Also make this reactive/hide when not needed if possible.
-forecast_pressure = wrap_in_field(
-    "Pressure",
+num_of_analogs = wrap_in_field(
+    "Number of analogs",
     dcc.Dropdown(
-        id="forecast-pressure",
-        options=[
-            {"label": pressure, "value": value}
-            for pressure, value in luts.pressure_levels.items()
-        ],
-        value=1,
+        id="num_analogs",
+        options=[{"label": value, "value": value} for value in range(1, 6)],
+        value=5,
     ),
 )
 
-forecast_theme_section = wrap_in_section(
-    [
-        html.H3("Forecast theme", className="subtitle is-4"),
-        forecast_theme_control,
-        html.Div(
-            id="forecast-pressure-wrapper",
-            className="hidden",
-            children=[forecast_pressure],
-        ),
-    ]
-)
-
-matching_method = wrap_in_field(
-    "Method for matching",
-    dcc.RadioItems(
-        id="match_method",
+correlations_control = wrap_in_field(
+    "Just plot correlations?",
+    dcc.Dropdown(
+        id="correlation",
         options=[
-            {"label": "Match by parameter weights", "value": "weight"},
-            {"label": "Match by index", "value": "index"},
+            {"label": theme, "value": value}
+            for theme, value in luts.correlations.items()
         ],
-        value="index",
+        value=0,
     ),
 )
 
@@ -235,34 +203,71 @@ method_weight_auto_weight = wrap_in_field(
     ),
 )
 
+
 def get_method_weight_field(param, weight):
     return wrap_in_field(param, dcc.Input(id="manual_weight_" + param, value=weight))
 
 
-manual_weight_controls = []
+manual_weight_controls = [html.P("Info about manual weighting")]
 for param, weight in luts.manual_weights.items():
     manual_weight_controls.append(get_method_weight_field(param, weight))
+
 manual_weights_form = html.Div(
-    id="manual-weights-form-wrapper", className="", children=manual_weight_controls
+    id="manual-weights-form-wrapper",
+    className="hidden",
+    children=manual_weight_controls,
 )
 
-match_index_param = wrap_in_field(
-    "Index for matching",
-    dcc.Dropdown(
-        id="forecast-match-index-param",
-        options=[
-            {"label": index, "value": value}
-            for index, value in luts.match_indices.items()
-        ],
+if_detrend_data = wrap_in_field(
+    "Detrend data?",
+    dcc.RadioItems(
+        id="detrend-data",
+        options=[{"label": "Yes", "value": 1}, {"label": "No", "value": 0}],
         value=1,
     ),
 )
 
-match_parameter_form = html.Div(
-    id="forecast-match-index-wrapper", className="", children=[match_index_param]
+
+override_years = wrap_in_field(
+    "Manually choose match years?",
+    dcc.RadioItems(
+        id="manual-match",
+        options=[{"label": "Yes", "value": 1}, {"label": "No", "value": 0}],
+        value=0,
+    ),
 )
 
-match_method_form = wrap_in_section([matching_method, manual_weights_form, match_parameter_form])
+
+def get_override_year_dropdown(field_id, year):
+    """ Build standard list of dropdowns for manual match years """
+    return dcc.Dropdown(
+        id=field_id,
+        options=[
+            {"label": value, "value": value} for value in range(1949, current_year + 1)
+        ],
+        value=year,
+    )
+
+
+manual_match_years = {
+    "override-year-1": 1949,
+    "override-year-2": 1959,
+    "override-year-3": 1969,
+    "override-year-4": 1979,
+    "override-year-5": 1989,
+}
+manual_match_fields = [
+    html.P(
+        "Choose manual match years.  Note that the script will fail if all the years are not different, or if you select a year combination in the future.",
+        className="content is-size-5",
+    )
+]
+for field_id, year in manual_match_years.items():
+    manual_match_fields.append(get_override_year_dropdown(field_id, year))
+
+manual_match_fields_wrapper = html.Div(
+    id="manual-match-form-wrapper", className="hidden", children=manual_match_fields
+)
 
 footer = html.Footer(
     className="footer has-text-centered",
@@ -290,25 +295,60 @@ footer = html.Footer(
             ]
         ),
         ddsih.DangerouslySetInnerHTML(
-            """
+            f"""
 <p>UA is an AA/EO employer and educational institution and prohibits illegal discrimination against any individual.
 <br><a href="https://www.alaska.edu/nondiscrimination/">Statement of Nondiscrimination</a></p>
+<p class="copyright">Copyright &copy; {current_year} University of Alaska Fairbanks.  All rights reserved.</p>
             """
         ),
     ],
 )
 
+left_column = [
+    html.H4("Spatial & temporal extents", className="subtitle is-4"),
+    html.H5("Analog match search area & time", className="subtitle is-5"),
+    analog_bbox_fields,
+    analog_temporal_daterange,
+    html.H5("Forecast area & time", className="subtitle is-5"),
+    forecast_bbox_fields,
+    forecast_temporal_daterange,
+]
+
+right_column = [
+    html.H4("Output parameter configuration", className="subtitle is-4"),
+    num_of_analogs,
+    forecast_theme_control,
+    method_weight_auto_weight,
+    manual_weights_form,
+    correlations_control,
+    override_years,
+    manual_match_fields_wrapper,
+]
+
 layout = html.Div(
     children=[
         header,
+        # Main app wrapper starts here
         html.Div(
             children=[
-                match_method_form,
                 about,
-                analog_bbox_form,
-                forecast_bbox_form,
-                temporal_range_form,
-                forecast_theme_section,
+                wrap_in_section(  # gives us section & container
+                    html.Div(  # Form & Column wrapper
+                        className="columns",
+                        children=[
+                            # Left column
+                            html.Div(
+                                className="column",
+                                children=[html.Form(children=left_column)],
+                            ),
+                            # Right columns
+                            html.Div(
+                                className="column",
+                                children=[html.Form(children=right_column)],
+                            ),
+                        ],
+                    )
+                ),  # end column structure
             ]
         ),
         footer,

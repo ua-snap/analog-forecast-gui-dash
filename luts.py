@@ -82,26 +82,6 @@ forecast_themes = {
     "Precip": 6,
 }
 
-pressure_levels = {
-    "1000mb": 0,
-    "925mb": 1,
-    "850mb": 2,
-    "700mb": 3,
-    "600mb": 4,
-    "500mb": 5,
-    "400mb": 6,
-    "300mb": 7,
-    "250mb": 8,
-    "200mb": 9,
-    "150mb": 10,
-    "100mb": 11,
-    "70mb": 12,
-    "50mb": 13,
-    "30mb": 14,
-    "20mb": 15,
-    "10mb": 16,
-}
-
 match_indices = {
     "PDO": 1,
     "NPM": 2,
@@ -112,6 +92,12 @@ match_indices = {
     "Combined EOFs": 7,
 }
 
+correlations = {
+    "No": 0,
+    "R-Value Maps": 1,
+    "R2-Value Maps": 2,
+    "Multiple R Correlation": 3
+}
 
 # Selection for manual weighting
 # x-ref `forecast_themes` to keep text aligned

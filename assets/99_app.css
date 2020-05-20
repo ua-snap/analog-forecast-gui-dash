@@ -45,8 +45,35 @@ nav .navbar-brand img {
 	fill: #ccc;
 }
 
-.dropdown-selector {
+/* Override Bulma for some field layouts to condense them. */
+.label:not(:last-child) {
+	margin-bottom: 0;
+}
+input[type=checkbox], input[type=radio] {
+	margin-right: .5rem;
+}
+#auto-weight label, #manual-match label {
+	margin-right: 1.5rem;
+}
+input[type="number"] {
+	max-width: 3rem;
+}
+.inline {
+	display: inline-block;
+	padding-right: 1rem;
+	/*float: left;*/
+}
+h5.subtitle.is-5 {
+	margin-top: 2rem;
+	margin-bottom: .5rem;
+}
+
+.dash-dropdown {
 	max-width: 15rem;
+}
+
+#manual-weights-form-wrapper {
+	padding: 0 1rem 2rem 2rem;
 }
 
 .footer {
