@@ -72,7 +72,7 @@ h5.subtitle.is-5 {
 	max-width: 15rem;
 }
 
-#manual-weights-form-wrapper {
+#manual-weights-form-wrapper, #manual-match-form-wrapper {
 	padding: 0 1rem 2rem 2rem;
 }
 

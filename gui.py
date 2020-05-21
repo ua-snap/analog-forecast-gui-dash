@@ -203,14 +203,20 @@ method_weight_auto_weight = wrap_in_field(
     ),
 )
 
+# TODO need to make this indexed so the IDs aren't clobbered,
+# or slugify or something
 
-def get_method_weight_field(param, weight):
-    return wrap_in_field(param, dcc.Input(id="manual_weight_" + param, value=weight))
+
+def get_method_weight_field(param, config):
+    return wrap_in_field(
+        param,
+        dcc.Input(id="manual_weight_" + str(config["idx"]), value=config["default"]),
+    )
 
 
 manual_weight_controls = [html.P("Info about manual weighting")]
-for param, weight in luts.manual_weights.items():
-    manual_weight_controls.append(get_method_weight_field(param, weight))
+for param, config in luts.manual_weights.items():
+    manual_weight_controls.append(get_method_weight_field(param, config))
 
 manual_weights_form = html.Div(
     id="manual-weights-form-wrapper",
@@ -229,11 +235,11 @@ if_detrend_data = wrap_in_field(
 
 
 override_years = wrap_in_field(
-    "Manually choose match years?",
+    "Automatically choose match years?",
     dcc.RadioItems(
         id="manual-match",
         options=[{"label": "Yes", "value": 1}, {"label": "No", "value": 0}],
-        value=0,
+        value=1,
     ),
 )
 
@@ -258,8 +264,8 @@ manual_match_years = {
 }
 manual_match_fields = [
     html.P(
-        "Choose manual match years.  Note that the script will fail if all the years are not different, or if you select a year combination in the future.",
-        className="content is-size-5",
+        "All years must be different, and not in the future.",
+        className="content is-size-6",
     )
 ]
 for field_id, year in manual_match_years.items():
@@ -267,6 +273,27 @@ for field_id, year in manual_match_years.items():
 
 manual_match_fields_wrapper = html.Div(
     id="manual-match-form-wrapper", className="hidden", children=manual_match_fields
+)
+
+run_section = wrap_in_section(
+    [
+        dcc.Markdown(
+            """
+Click the button below to launch a new window that will run the analog forecast with the parameters you have selected.
+
+It may take a few minutes for the results to be available.
+""",
+            className="content is-size-5",
+        ),
+        html.A(
+            "Run analog forecast",
+            id="api-button",
+            href="#",
+            className="button is-primary is-large",
+            target="_blank",
+        ),
+        html.Div("cats and dogs", id="textarea-example-output", style={"white-space": "pre-line"}),
+    ]
 )
 
 footer = html.Footer(
@@ -351,6 +378,7 @@ layout = html.Div(
                 ),  # end column structure
             ]
         ),
+        run_section,
         footer,
     ]
 )

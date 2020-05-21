@@ -5,7 +5,7 @@ Common shared text strings and lookup tables.
 import os
 from datetime import date
 
-title = "Analog Forecast Tool"
+title = "Experimental Analog Forecast Tool"
 url = "http://snap.uaf.edu/tools/demo"
 preview = "http://snap.uaf.edu/tools/demo/assets/preview.png"
 description = "Run an analog forecast tool to see future forecasts from past data."
@@ -82,16 +82,6 @@ forecast_themes = {
     "Precip": 6,
 }
 
-match_indices = {
-    "PDO": 1,
-    "NPM": 2,
-    "SOI": 3,
-    "EOF1": 4,
-    "EOF2": 5,
-    "EOF3": 6,
-    "Combined EOFs": 7,
-}
-
 correlations = {
     "No": 0,
     "R-Value Maps": 1,
@@ -100,13 +90,13 @@ correlations = {
 }
 
 # Selection for manual weighting
-# x-ref `forecast_themes` to keep text aligned
+# TODO: x-ref `forecast_themes` to keep text aligned
+# idx refers to the number that is postfixed to the control
+# to get a unique element ID to process for the API
 manual_weights = {
-    "SLP": 100,
-    "Pressure level height": 0,
-    "2-meter temps": 0,
-    "Pressure level temp": 0,
-    "SST": 0,
+    "SLP": dict(default=100, idx=1),
+    "Pressure level height": dict(default=0, idx=2),
+    "2-meter temps": dict(default=0, idx=3),
+    "Pressure level temp": dict(default=0, idx=4),
+    "SST": dict(default=0, idx=5),
 }
-
-
