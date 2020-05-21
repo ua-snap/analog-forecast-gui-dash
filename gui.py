@@ -292,7 +292,7 @@ It may take a few minutes for the results to be available.
             className="button is-primary is-large",
             target="_blank",
         ),
-        html.Div("cats and dogs", id="textarea-example-output", style={"white-space": "pre-line"}),
+        html.Pre("cats and dogs", id="textarea-example-output", style={"white-space": "pre-line"}),
     ]
 )
 
