@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 dash = "*"
 dash-dangerously-set-inner-html = "*"
+urllib = "*"
 
 [requires]
 python_version = "3.6"

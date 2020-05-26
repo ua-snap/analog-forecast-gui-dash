@@ -57,7 +57,7 @@ header = ddsih.DangerouslySetInnerHTML(
 <nav class="navbar" role="navigation" aria-label="main navigation">
 
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://www.snap.uaf.edu">
+    <a class="navbar-item" href="https://uaf-iarc.org">
       <img src="{path_prefix}assets/IARC_color_square_acronym-2.svg">
     </a>
 
@@ -132,16 +132,14 @@ forecast_bbox_fields = html.Div(
 
 
 # TODO default these to moving window that makes sense
-# TODO these may suck for year/month entry without day
 analog_temporal_daterange = wrap_in_field(
     "Date range for analog search",
     dcc.DatePickerRange(
         id="analog_daterange",
         display_format="MMMM YYYY",
         min_date_allowed=datetime(1950, 1, 1),
-        max_date_allowed=datetime(2022, 12, 31),
-        initial_visible_month=datetime(2017, 8, 5),
-        end_date=datetime(2018, 8, 25).date(),
+        start_date="2000-04-01",
+        end_date="2019-07-01"
     ),
 )
 
@@ -150,10 +148,8 @@ forecast_temporal_daterange = wrap_in_field(
     dcc.DatePickerRange(
         id="forecast_daterange",
         display_format="MMMM YYYY",
-        min_date_allowed=datetime(1950, 1, 1),
-        max_date_allowed=datetime(2022, 12, 31),
-        initial_visible_month=datetime(2017, 8, 5),
-        end_date=datetime(2018, 8, 25).date(),
+        start_date="2020-05-01",
+        end_date="2020-07-01",
     ),
 )
 
@@ -291,8 +287,7 @@ It may take a few minutes for the results to be available.
             href="#",
             className="button is-primary is-large",
             target="_blank",
-        ),
-        html.Pre("cats and dogs", id="textarea-example-output", style={"white-space": "pre-line"}),
+        )
     ]
 )
 
@@ -333,6 +328,7 @@ footer = html.Footer(
 
 left_column = [
     html.H4("Spatial & temporal extents", className="subtitle is-4"),
+    html.P("Date ranges can be chosen with the popup calendar or by typing in the boxes directly.  Only month/year is used for analysis purposes.", className="content is-size-6"),
     html.H5("Analog match search area & time", className="subtitle is-5"),
     analog_bbox_fields,
     analog_temporal_daterange,

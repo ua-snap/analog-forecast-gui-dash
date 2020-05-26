@@ -3,11 +3,16 @@
 Template for SNAP Dash apps.
 """
 import os
-import json # TODO REMOVE
+import urllib.parse
 import dash
 from dash.dependencies import Input, Output
 import luts
 from gui import layout
+
+# URL base to API glue.
+EAPI_API_URL = os.getenv("EAPI_API_URL")
+if EAPI_API_URL is None:
+    raise RuntimeError("EAPI_API_URL environment variable not set.")
 
 app = dash.Dash(
     __name__, requests_pathname_prefix=os.environ["REQUESTS_PATHNAME_PREFIX"]
@@ -43,8 +48,9 @@ def toggle_manual_match_form(method):
     return "hidden"
 
 
+# The next piece is slightly painful but at least it's explicit.
 @app.callback(
-    Output("textarea-example-output", "children"),
+    Output("api-button", "href"),
     [
         Input("analog_bbox_n", "value"),
         Input("analog_bbox_w", "value"),
@@ -105,8 +111,41 @@ def update_api_url(
     override_year_5,
 ):
     """ Build API URL string from GUI """
-    print(locals())
-    return json.dumps(locals())
+    params = urllib.parse.urlencode(
+        dict(
+            analog_bbox_n=analog_bbox_n,
+            analog_bbox_w=analog_bbox_w,
+            analog_bbox_e=analog_bbox_e,
+            analog_bbox_s=analog_bbox_s,
+            forecast_bbox_n=forecast_bbox_n,
+            forecast_bbox_w=forecast_bbox_w,
+            forecast_bbox_e=forecast_bbox_e,
+            forecast_bbox_s=forecast_bbox_s,
+            analog_daterange_start=analog_daterange_start,
+            analog_daterange_end=analog_daterange_end,
+            forecast_daterange_start=forecast_daterange_start,
+            forecast_daterange_end=forecast_daterange_end,
+            num_analogs=num_analogs,
+            forecast_theme=forecast_theme,
+            auto_weight=auto_weight,
+            manual_weight_1=manual_weight_1,
+            manual_weight_2=manual_weight_2,
+            manual_weight_3=manual_weight_3,
+            manual_weight_4=manual_weight_4,
+            manual_weight_5=manual_weight_5,
+            correlation=correlation,
+            manual_match=manual_match,
+            override_year_1=override_year_1,
+            override_year_2=override_year_2,
+            override_year_3=override_year_3,
+            override_year_4=override_year_4,
+            override_year_5=override_year_5,
+        )
+    )
+    url = EAPI_API_URL + "/?" + params
+
+    print(url)
+    return url
 
 
 if __name__ == "__main__":
