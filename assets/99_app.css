@@ -52,7 +52,7 @@ nav .navbar-brand img {
 input[type=checkbox], input[type=radio] {
 	margin-right: .5rem;
 }
-#auto-weight label, #manual-match label {
+#auto-weight label, #manual-match label, #detrend-data label {
 	margin-right: 1.5rem;
 }
 input[type="number"] {

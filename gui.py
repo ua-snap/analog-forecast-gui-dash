@@ -346,6 +346,7 @@ right_column = [
     correlations_control,
     override_years,
     manual_match_fields_wrapper,
+    if_detrend_data,
 ]
 
 layout = html.Div(

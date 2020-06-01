@@ -79,6 +79,7 @@ def toggle_manual_match_form(method):
         Input("override-year-3", "value"),
         Input("override-year-4", "value"),
         Input("override-year-5", "value"),
+        Input("detrend-data", "value"),
     ],
 )
 def update_api_url(
@@ -109,6 +110,7 @@ def update_api_url(
     override_year_3,
     override_year_4,
     override_year_5,
+    detrend_data
 ):
     """ Build API URL string from GUI """
     params = urllib.parse.urlencode(
@@ -140,6 +142,7 @@ def update_api_url(
             override_year_3=override_year_3,
             override_year_4=override_year_4,
             override_year_5=override_year_5,
+            detrend_data=detrend_data,
         )
     )
     url = EAPI_API_URL + "/?" + params
