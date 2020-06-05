@@ -8,7 +8,6 @@ verify_ssl = true
 [packages]
 dash = "*"
 dash-dangerously-set-inner-html = "*"
-urllib = "*"
 python-dateutil = "*"
 
 [requires]
