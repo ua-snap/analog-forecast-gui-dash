@@ -4,7 +4,8 @@ GUI for app
 """
 
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_dangerously_set_inner_html as ddsih
@@ -12,6 +13,12 @@ import luts
 
 # Used in some fields & copyright date
 current_year = datetime.now().year
+
+# Compute default date ranges.
+current_date = datetime.now()
+analog_start_default = current_date - relativedelta(months=5)
+analog_end_default = current_date - relativedelta(months=2)
+forecast_end_default = current_date + relativedelta(months=2)
 
 # For hosting
 path_prefix = os.getenv("REQUESTS_PATHNAME_PREFIX") or "/"
@@ -90,10 +97,14 @@ about = wrap_in_section(
             f"""
 <h1 class="title is-3">{luts.title}</h1>
 <p>Explain app here.</p>
+<p>Date ranges can be chosen with the popup calendar <strong>or by typing in the boxes directly</strong>.  Only month/year is used for analysis purposes.</p>
+<p>Clicking the buttons below to run the correlations or analog forecast will open a new window that will run the processing code with the parameters you have selected.</p>
+<p>It may take a few minutes for the results to be available.</p>
+
 """
         )
     ],
-    div_classes="content is-size-5",
+    div_classes="content is-size-5 narrow",
 )
 
 analog_bbox_fields = html.Div(
@@ -116,30 +127,29 @@ analog_bbox_fields = html.Div(
 forecast_bbox_fields = html.Div(
     children=[
         wrap_in_field(
-            "North", dcc.Input(id="forecast_bbox_n", type="number", value=90), "inline"
+            "North", dcc.Input(id="forecast_bbox_n", type="number", value=72), "inline"
         ),
         wrap_in_field(
-            "West", dcc.Input(id="forecast_bbox_w", type="number", value=0), "inline"
+            "West", dcc.Input(id="forecast_bbox_w", type="number", value=180), "inline"
         ),
         wrap_in_field(
-            "South", dcc.Input(id="forecast_bbox_s", type="number", value=70), "inline"
+            "South", dcc.Input(id="forecast_bbox_s", type="number", value=53), "inline"
         ),
         wrap_in_field(
-            "East", dcc.Input(id="forecast_bbox_e", type="number", value=360), "inline"
+            "East", dcc.Input(id="forecast_bbox_e", type="number", value=230), "inline"
         ),
     ]
 )
 
 
-# TODO default these to moving window that makes sense
 analog_temporal_daterange = wrap_in_field(
     "Date range for analog search",
     dcc.DatePickerRange(
         id="analog_daterange",
         display_format="MMMM YYYY",
         min_date_allowed=datetime(1950, 1, 1),
-        start_date="2000-04-01",
-        end_date="2019-07-01"
+        start_date=analog_start_default,
+        end_date=analog_end_default,
     ),
 )
 
@@ -148,8 +158,8 @@ forecast_temporal_daterange = wrap_in_field(
     dcc.DatePickerRange(
         id="forecast_daterange",
         display_format="MMMM YYYY",
-        start_date="2020-05-01",
-        end_date="2020-07-01",
+        start_date=current_date,
+        end_date=forecast_end_default,
     ),
 )
 
@@ -165,7 +175,7 @@ forecast_theme_control = wrap_in_field(
             {"label": theme, "value": value}
             for theme, value in luts.forecast_themes.items()
         ],
-        value=1,
+        value=3,
     ),
 )
 
@@ -176,6 +186,7 @@ num_of_analogs = wrap_in_field(
         options=[{"label": value, "value": value} for value in range(1, 6)],
         value=5,
     ),
+    className="hidden",
 )
 
 correlations_control = wrap_in_field(
@@ -188,6 +199,7 @@ correlations_control = wrap_in_field(
         ],
         value=0,
     ),
+    className="hidden",
 )
 
 method_weight_auto_weight = wrap_in_field(
@@ -197,6 +209,7 @@ method_weight_auto_weight = wrap_in_field(
         options=[{"label": "Yes", "value": 1}, {"label": "No", "value": 0}],
         value=1,
     ),
+    className="hidden",
 )
 
 # TODO need to make this indexed so the IDs aren't clobbered,
@@ -225,8 +238,9 @@ if_detrend_data = wrap_in_field(
     dcc.RadioItems(
         id="detrend-data",
         options=[{"label": "Yes", "value": 1}, {"label": "No", "value": 0}],
-        value=1,
+        value=0,
     ),
+    className="hidden",
 )
 
 
@@ -234,9 +248,10 @@ override_years = wrap_in_field(
     "Automatically choose match years?",
     dcc.RadioItems(
         id="manual-match",
-        options=[{"label": "Yes", "value": 1}, {"label": "No", "value": 0}],
-        value=1,
+        options=[{"label": "Yes", "value": 0}, {"label": "No", "value": 1}],
+        value=0,
     ),
+    className="hidden",
 )
 
 
@@ -271,22 +286,66 @@ manual_match_fields_wrapper = html.Div(
     id="manual-match-form-wrapper", className="hidden", children=manual_match_fields
 )
 
-run_section = wrap_in_section(
-    [
-        dcc.Markdown(
-            """
-Click the button below to launch a new window that will run the analog forecast with the parameters you have selected.
+left_column = [
+    html.H5("Forecast theme, area, and time span", className="title is-5"),
+    html.P("Search area defaults to approximately the spatial extent of Alaska.  TODO verify range of lat/lon, where is 0/360 here?", className="content is-size-6"),
+    forecast_theme_control,
+    forecast_bbox_fields,
+    forecast_temporal_daterange,
+]
 
-It may take a few minutes for the results to be available.
-""",
-            className="content is-size-5",
-        ),
-        html.A(
-            "Run analog forecast",
-            id="api-button",
-            href="#",
-            className="button is-primary is-large",
-            target="_blank",
+center_column = [
+    html.H5("Correlations plots", className="title is-5"),
+    html.P(
+        """
+Which areas of the globe have a high statistical correlation with the forecast area?  Correlations plots will use the first month for the forecast time and search for historical correlations.""",
+        className="content is-size-6",
+    ),
+    html.A(
+        "Plot correlations",
+        id="correlations-button",
+        href="#",
+        className="button is-primary",
+        target="_blank",
+    ),
+]
+
+right_column = [
+    html.H5("Analog match search area & time", className="title is-5"),
+    analog_bbox_fields,
+    analog_temporal_daterange,
+    num_of_analogs,
+    method_weight_auto_weight,
+    manual_weights_form,
+    correlations_control,
+    override_years,
+    manual_match_fields_wrapper,
+    if_detrend_data,
+    html.A(
+        "Run analog forecast",
+        id="api-button",
+        href="#",
+        className="button is-primary",
+        target="_blank",
+    ),
+]
+
+# Main app wrapper starts here
+main_section = html.Div(
+    children=[
+        wrap_in_section(  # gives us section & container
+            html.Form(
+                children=[
+                    html.Div(  # Form & Column wrapper
+                        className="columns",
+                        children=[
+                            html.Div(className="column", children=left_column),
+                            html.Div(className="column", children=center_column),
+                            html.Div(className="column", children=right_column),
+                        ],
+                    )
+                ]
+            )  # end column structure
         )
     ]
 )
@@ -326,56 +385,5 @@ footer = html.Footer(
     ],
 )
 
-left_column = [
-    html.H4("Spatial & temporal extents", className="subtitle is-4"),
-    html.P("Date ranges can be chosen with the popup calendar or by typing in the boxes directly.  Only month/year is used for analysis purposes.", className="content is-size-6"),
-    html.H5("Analog match search area & time", className="subtitle is-5"),
-    analog_bbox_fields,
-    analog_temporal_daterange,
-    html.H5("Forecast area & time", className="subtitle is-5"),
-    forecast_bbox_fields,
-    forecast_temporal_daterange,
-]
 
-right_column = [
-    html.H4("Output parameter configuration", className="subtitle is-4"),
-    num_of_analogs,
-    forecast_theme_control,
-    method_weight_auto_weight,
-    manual_weights_form,
-    correlations_control,
-    override_years,
-    manual_match_fields_wrapper,
-    if_detrend_data,
-]
-
-layout = html.Div(
-    children=[
-        header,
-        # Main app wrapper starts here
-        html.Div(
-            children=[
-                about,
-                wrap_in_section(  # gives us section & container
-                    html.Div(  # Form & Column wrapper
-                        className="columns",
-                        children=[
-                            # Left column
-                            html.Div(
-                                className="column",
-                                children=[html.Form(children=left_column)],
-                            ),
-                            # Right columns
-                            html.Div(
-                                className="column",
-                                children=[html.Form(children=right_column)],
-                            ),
-                        ],
-                    )
-                ),  # end column structure
-            ]
-        ),
-        run_section,
-        footer,
-    ]
-)
+layout = html.Div(children=[header, about, main_section, footer])

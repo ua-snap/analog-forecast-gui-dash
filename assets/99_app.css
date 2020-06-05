@@ -9,12 +9,29 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Open Sans';
 }
 
+/* Clamp narrative text to some sane width. */
+.narrow {
+	max-width: 40rem;
+}
+
 .visible {
 	display: block;
 }
 
 .hidden {
 	display: none;
+}
+
+/* Give the form controls some breathing room before the footer */
+div.columns {
+	padding-bottom: 4rem;
+}
+
+/* Fix the Dash styling here */
+.DateInput_input {
+	font-size: .9rem;
+	line-height: 1;
+	font-weight: 400;
 }
 
 .button.is-primary {

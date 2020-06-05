@@ -9,6 +9,7 @@ verify_ssl = true
 dash = "*"
 dash-dangerously-set-inner-html = "*"
 urllib = "*"
+python-dateutil = "*"
 
 [requires]
 python_version = "3.6"
