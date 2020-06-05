@@ -15,18 +15,15 @@ After cloning this template, run it this way:
 pipenv install
 export FLASK_APP=application.py
 export FLASK_DEBUG=True
+export EAPI_API_URL=http://localhost:3000
 pipenv run flask run
 ```
 
 The project is run through Flask and will be available at [http://localhost:5000](http://localhost:5000).
 
-Other env vars that can be set:
+Env vars which must be set:
 
- * `DASH_LOG_LEVEL` - sets level of logger, default INFO
- * `DASH_CACHE_EXPIRE` - Has sane default (1 day), override if testing cache behavior.
- * `TALLY_DATA_URL` - URL to source data CSV, has a sane working default baked in
- * `TALLY_DATA_ZONES_URL` - URL to source data CSV, has a sane working default baked in
-
+ * `EAPI_API_URL` - URL for API.
 
 ## Deploying to AWS Elastic Beanstalk:
 

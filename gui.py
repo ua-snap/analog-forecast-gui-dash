@@ -4,7 +4,7 @@ GUI for app
 """
 
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import dash_core_components as dcc
 import dash_html_components as html
@@ -98,9 +98,6 @@ about = wrap_in_section(
 <h1 class="title is-3">{luts.title}</h1>
 <p>Explain app here.</p>
 <p>Date ranges can be chosen with the popup calendar <strong>or by typing in the boxes directly</strong>.  Only month/year is used for analysis purposes.</p>
-<p>Clicking the buttons below to run the correlations or analog forecast will open a new window that will run the processing code with the parameters you have selected.</p>
-<p>It may take a few minutes for the results to be available.</p>
-
 """
         )
     ],
@@ -288,29 +285,16 @@ manual_match_fields_wrapper = html.Div(
 
 left_column = [
     html.H5("Forecast theme, area, and time span", className="title is-5"),
-    html.P("Search area defaults to approximately the spatial extent of Alaska.  TODO verify range of lat/lon, where is 0/360 here?", className="content is-size-6"),
+    html.P(
+        "Search area defaults to approximately the spatial extent of Alaska.  Longitudes go from 0-360.",
+        className="content is-size-6",
+    ),
     forecast_theme_control,
     forecast_bbox_fields,
     forecast_temporal_daterange,
 ]
 
 center_column = [
-    html.H5("Correlations plots", className="title is-5"),
-    html.P(
-        """
-Which areas of the globe have a high statistical correlation with the forecast area?  Correlations plots will use the first month for the forecast time and search for historical correlations.""",
-        className="content is-size-6",
-    ),
-    html.A(
-        "Plot correlations",
-        id="correlations-button",
-        href="#",
-        className="button is-primary",
-        target="_blank",
-    ),
-]
-
-right_column = [
     html.H5("Analog match search area & time", className="title is-5"),
     analog_bbox_fields,
     analog_temporal_daterange,
@@ -321,6 +305,16 @@ right_column = [
     override_years,
     manual_match_fields_wrapper,
     if_detrend_data,
+]
+
+right_column = [
+    html.H5("Run analog forecast", className="title is-5"),
+    html.P(
+        """
+Clicking the button below will open a new window that will run the analog forecast.  It may take a few minutes for the results to be available.
+""",
+        className="content is-size-6",
+    ),
     html.A(
         "Run analog forecast",
         id="api-button",
