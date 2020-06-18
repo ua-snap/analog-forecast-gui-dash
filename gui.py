@@ -209,9 +209,6 @@ method_weight_auto_weight = wrap_in_field(
     className="hidden",
 )
 
-# TODO need to make this indexed so the IDs aren't clobbered,
-# or slugify or something
-
 
 def get_method_weight_field(param, config):
     return wrap_in_field(
