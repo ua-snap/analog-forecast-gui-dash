@@ -79,7 +79,7 @@ header = ddsih.DangerouslySetInnerHTML(
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a target="_blank" rel="noopener noreferrer" href="https://uaf-iarc.typeform.com/to/UCZcRB" class="button is-primary">
+          <a style="display: none;" target="_blank" rel="noopener noreferrer" href="https://uaf-iarc.typeform.com/to/UCZcRB" class="button is-primary">
             <strong>Feedback</strong>
           </a>
         </div>
