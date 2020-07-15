@@ -280,10 +280,10 @@ manual_match_fields_wrapper = html.Div(
     id="manual-match-form-wrapper", className="hidden", children=manual_match_fields
 )
 
-left_column = [
+center_column = [
     html.H5("Forecast theme, area, and time span", className="title is-5"),
     html.P(
-        "Search area defaults to approximately the spatial extent of Alaska.  Longitudes go from 0-360.",
+        "Forecast area defaults to approximately the spatial extent of Alaska.  Longitudes go from 0-360.",
         className="content is-size-6",
     ),
     forecast_theme_control,
@@ -291,8 +291,12 @@ left_column = [
     forecast_temporal_daterange,
 ]
 
-center_column = [
+left_column = [
     html.H5("Analog match search area & time", className="title is-5"),
+    html.P(
+        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.",
+        className="content is-size-6",
+    ),
     analog_bbox_fields,
     analog_temporal_daterange,
     num_of_analogs,
