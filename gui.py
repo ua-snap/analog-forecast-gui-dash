@@ -16,8 +16,8 @@ current_year = datetime.now().year
 
 # Compute default date ranges.
 current_date = datetime.now()
-analog_start_default = current_date - relativedelta(months=5)
-analog_end_default = current_date - relativedelta(months=2)
+analog_start_default = current_date - relativedelta(months=3)
+analog_end_default = current_date - relativedelta(months=1)
 forecast_end_default = current_date + relativedelta(months=2)
 
 # For hosting
@@ -107,16 +107,16 @@ about = wrap_in_section(
 analog_bbox_fields = html.Div(
     children=[
         wrap_in_field(
-            "North", dcc.Input(id="analog_bbox_n", type="number", value=90), "inline"
+            "North", dcc.Input(id="analog_bbox_n", type="number", value=20), "inline"
         ),
         wrap_in_field(
-            "West", dcc.Input(id="analog_bbox_w", type="number", value=0), "inline"
+            "West", dcc.Input(id="analog_bbox_w", type="number", value=110), "inline"
         ),
         wrap_in_field(
-            "South", dcc.Input(id="analog_bbox_s", type="number", value=0), "inline"
+            "South", dcc.Input(id="analog_bbox_s", type="number", value=10), "inline"
         ),
         wrap_in_field(
-            "East", dcc.Input(id="analog_bbox_e", type="number", value=360), "inline"
+            "East", dcc.Input(id="analog_bbox_e", type="number", value=140), "inline"
         ),
     ]
 )
