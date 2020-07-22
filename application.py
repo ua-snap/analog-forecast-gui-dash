@@ -1,9 +1,19 @@
 # pylint: disable=C0103,C0301,E0401
 """
-Template for SNAP Dash apps.
+Implements GUI controls for this app.
+
+Note that some controls are here which aren't
+currently exposed: this is delibrate, since we
+found during development that some of the variables
+didn't function in a way we expected with the
+processing code, so we've pared it back to the
+minimum.
+
 """
 import os
+import re
 import urllib.parse
+from datetime import datetime as dt
 import dash
 from dash.dependencies import Input, Output
 import luts
@@ -25,7 +35,7 @@ app.title = luts.title
 app.index_string = luts.index_string
 app.layout = layout
 
-
+# Not exposed in current version of app.
 @app.callback(
     Output("manual-weights-form-wrapper", "className"), [Input("auto-weight", "value")]
 )
@@ -37,7 +47,7 @@ def toggle_manual_weights_form(method):
 
     return "hidden"
 
-
+# Not exposed in current version of app.
 @app.callback(
     Output("manual-match-form-wrapper", "className"), [Input("manual-match", "value")]
 )
@@ -50,6 +60,10 @@ def toggle_manual_match_form(method):
 
     return "hidden"
 
+def ymd_from_dash(d):
+    """ Helper function to return Y-m-d from Dash date GUI picker """
+    date = dt.strptime(re.split('T| ', d)[0], '%Y-%m-%d')
+    return date.strftime('%Y-%m-%d')
 
 # The next piece is slightly painful but at least it's explicit.
 @app.callback(
@@ -113,7 +127,7 @@ def update_api_url(
     override_year_3,
     override_year_4,
     override_year_5,
-    detrend_data
+    detrend_data,
 ):
     """ Build API URL string from GUI """
     params = urllib.parse.urlencode(
@@ -126,10 +140,10 @@ def update_api_url(
             forecast_bbox_w=forecast_bbox_w,
             forecast_bbox_e=forecast_bbox_e,
             forecast_bbox_s=forecast_bbox_s,
-            analog_daterange_start=analog_daterange_start,
-            analog_daterange_end=analog_daterange_end,
-            forecast_daterange_start=forecast_daterange_start,
-            forecast_daterange_end=forecast_daterange_end,
+            analog_daterange_start=ymd_from_dash(analog_daterange_start),
+            analog_daterange_end=ymd_from_dash(analog_daterange_end),
+            forecast_daterange_start=ymd_from_dash(forecast_daterange_start),
+            forecast_daterange_end=ymd_from_dash(forecast_daterange_end),
             num_analogs=num_analogs,
             forecast_theme=forecast_theme,
             auto_weight=auto_weight,
@@ -149,8 +163,6 @@ def update_api_url(
         )
     )
     url = EAPI_API_URL + "/forecast?" + params
-
-    print(url)
     return url
 
 

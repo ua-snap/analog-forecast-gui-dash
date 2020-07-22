@@ -96,7 +96,6 @@ about = wrap_in_section(
         ddsih.DangerouslySetInnerHTML(
             f"""
 <h1 class="title is-3">{luts.title}</h1>
-<p>Explain app here.</p>
 <p>Date ranges can be chosen with the popup calendar <strong>or by typing in the boxes directly</strong>.  Only month/year is used for analysis purposes.</p>
 """
         )
@@ -176,6 +175,7 @@ forecast_theme_control = wrap_in_field(
     ),
 )
 
+# Not exposed in current version of app.
 num_of_analogs = wrap_in_field(
     "Number of analogs",
     dcc.Dropdown(
@@ -186,6 +186,7 @@ num_of_analogs = wrap_in_field(
     className="hidden",
 )
 
+# Not exposed in current version of app.
 correlations_control = wrap_in_field(
     "Just plot correlations?",
     dcc.Dropdown(
@@ -199,6 +200,7 @@ correlations_control = wrap_in_field(
     className="hidden",
 )
 
+# Not exposed in current version of app.
 method_weight_auto_weight = wrap_in_field(
     "Automatically calculate weightings?",
     dcc.RadioItems(
@@ -209,14 +211,14 @@ method_weight_auto_weight = wrap_in_field(
     className="hidden",
 )
 
-
+# Not exposed in current version of app.
 def get_method_weight_field(param, config):
     return wrap_in_field(
         param,
         dcc.Input(id="manual_weight_" + str(config["idx"]), value=config["default"]),
     )
 
-
+# Not exposed in current version of app.
 manual_weight_controls = [html.P("Info about manual weighting")]
 for param, config in luts.manual_weights.items():
     manual_weight_controls.append(get_method_weight_field(param, config))
@@ -227,6 +229,7 @@ manual_weights_form = html.Div(
     children=manual_weight_controls,
 )
 
+# Not exposed in current version of app.
 if_detrend_data = wrap_in_field(
     "Detrend data?",
     dcc.RadioItems(
@@ -237,7 +240,7 @@ if_detrend_data = wrap_in_field(
     className="hidden",
 )
 
-
+# Not exposed in current version of app.
 override_years = wrap_in_field(
     "Automatically choose match years?",
     dcc.RadioItems(
@@ -248,7 +251,7 @@ override_years = wrap_in_field(
     className="hidden",
 )
 
-
+# Not exposed in current version of app.
 def get_override_year_dropdown(field_id, year):
     """ Build standard list of dropdowns for manual match years """
     return dcc.Dropdown(
@@ -259,7 +262,7 @@ def get_override_year_dropdown(field_id, year):
         value=year,
     )
 
-
+# Not exposed in current version of app.
 manual_match_years = {
     "override-year-1": 1949,
     "override-year-2": 1959,
@@ -283,7 +286,7 @@ manual_match_fields_wrapper = html.Div(
 center_column = [
     html.H5("Forecast theme, area, and time span", className="title is-5"),
     html.P(
-        "Forecast area defaults to approximately the spatial extent of Alaska.  Longitudes go from 0-360.",
+        "Forecast area defaults to approximately the spatial extent of Alaska.",
         className="content is-size-6",
     ),
     forecast_theme_control,
@@ -294,7 +297,7 @@ center_column = [
 left_column = [
     html.H5("Analog match search area & time", className="title is-5"),
     html.P(
-        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.",
+        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.    Longitudes go from 0-360.",
         className="content is-size-6",
     ),
     analog_bbox_fields,
