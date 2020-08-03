@@ -218,6 +218,7 @@ def get_method_weight_field(param, config):
         dcc.Input(id="manual_weight_" + str(config["idx"]), value=config["default"]),
     )
 
+
 # Not exposed in current version of app.
 manual_weight_controls = [html.P("Info about manual weighting")]
 for param, config in luts.manual_weights.items():
@@ -261,6 +262,7 @@ def get_override_year_dropdown(field_id, year):
         ],
         value=year,
     )
+
 
 # Not exposed in current version of app.
 manual_match_years = {

@@ -86,7 +86,7 @@ correlations = {
     "No": 0,
     "R-Value Maps": 1,
     "R2-Value Maps": 2,
-    "Multiple R Correlation": 3
+    "Multiple R Correlation": 3,
 }
 
 # Selection for manual weighting

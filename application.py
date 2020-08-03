@@ -24,9 +24,7 @@ EAPI_API_URL = os.getenv("EAPI_API_URL")
 if EAPI_API_URL is None:
     raise RuntimeError("EAPI_API_URL environment variable not set.")
 
-app = dash.Dash(
-    __name__, requests_pathname_prefix=path_prefix
-)
+app = dash.Dash(__name__, requests_pathname_prefix=path_prefix)
 
 # AWS Elastic Beanstalk looks for application by default,
 # if this variable (application) isn't set you will get a WSGI error.
@@ -47,6 +45,7 @@ def toggle_manual_weights_form(method):
 
     return "hidden"
 
+
 # Not exposed in current version of app.
 @app.callback(
     Output("manual-match-form-wrapper", "className"), [Input("manual-match", "value")]
@@ -55,15 +54,18 @@ def toggle_manual_match_form(method):
     """ Hide/show field based on other values """
     # This one is for manually picking years.
     # 1=override (manual match).  0= auto match
+    # Test
     if method == 1:
         return "visible"
 
     return "hidden"
 
+
 def ymd_from_dash(d):
     """ Helper function to return Y-m-d from Dash date GUI picker """
-    date = dt.strptime(re.split('T| ', d)[0], '%Y-%m-%d')
-    return date.strftime('%Y-%m-%d')
+    date = dt.strptime(re.split("T| ", d)[0], "%Y-%m-%d")
+    return date.strftime("%Y-%m-%d")
+
 
 # The next piece is slightly painful but at least it's explicit.
 @app.callback(
