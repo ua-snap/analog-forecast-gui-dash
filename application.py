@@ -17,7 +17,7 @@ from datetime import datetime as dt
 import dash
 from dash.dependencies import Input, Output
 import luts
-from gui import layout
+from gui import layout, path_prefix
 
 # URL base to API glue.
 EAPI_API_URL = os.getenv("EAPI_API_URL")
@@ -25,7 +25,7 @@ if EAPI_API_URL is None:
     raise RuntimeError("EAPI_API_URL environment variable not set.")
 
 app = dash.Dash(
-    __name__, requests_pathname_prefix=os.environ["REQUESTS_PATHNAME_PREFIX"]
+    __name__, requests_pathname_prefix=path_prefix
 )
 
 # AWS Elastic Beanstalk looks for application by default,
