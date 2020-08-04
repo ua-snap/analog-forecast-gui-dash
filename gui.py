@@ -138,25 +138,35 @@ forecast_bbox_fields = html.Div(
 )
 
 
-analog_temporal_daterange = wrap_in_field(
-    "Date range for analog search",
-    dcc.DatePickerRange(
-        id="analog_daterange",
-        display_format="MMMM YYYY",
-        min_date_allowed=datetime(1950, 1, 1),
-        start_date=analog_start_default,
-        end_date=analog_end_default,
-    ),
+analog_temporal_daterange = html.Div(
+    children=[
+        wrap_in_field(
+            "Date range for analog search",
+            dcc.DatePickerRange(
+                id="analog_daterange",
+                display_format="MMMM YYYY",
+                min_date_allowed=datetime(1950, 1, 1),
+                start_date=analog_start_default,
+                end_date=analog_end_default,
+            ),
+        ),
+        dcc.Input(id="analog_date_check", type="text", placeholder="analog_date"),
+    ]
 )
 
-forecast_temporal_daterange = wrap_in_field(
-    "Date range for forecast",
-    dcc.DatePickerRange(
-        id="forecast_daterange",
-        display_format="MMMM YYYY",
-        start_date=current_date,
-        end_date=forecast_end_default,
-    ),
+forecast_temporal_daterange = html.Div(
+    children=[
+        wrap_in_field(
+            "Date range for forecast",
+            dcc.DatePickerRange(
+                id="forecast_daterange",
+                display_format="MMMM YYYY",
+                start_date=current_date,
+                end_date=forecast_end_default,
+            ),
+        ),
+        dcc.Input(id="forecast_date_check", type="text", placeholder="forecast_date"),
+    ]
 )
 
 temporal_range_form = wrap_in_section(

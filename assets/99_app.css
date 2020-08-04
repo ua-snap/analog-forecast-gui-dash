@@ -27,6 +27,10 @@ div.columns {
 	padding-bottom: 4rem;
 }
 
+#analog_date_check, #forecast_date_check {
+    display: none;
+}
+
 /* Fix the Dash styling here */
 .DateInput_input {
 	font-size: .9rem;

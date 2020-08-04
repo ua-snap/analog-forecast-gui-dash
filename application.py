@@ -14,13 +14,14 @@ import os
 import re
 import urllib.parse
 from datetime import datetime as dt
+from dateutil.relativedelta import relativedelta
 import dash
 from dash.dependencies import Input, Output
 import luts
 from gui import layout, path_prefix
 
 # URL base to API glue.
-EAPI_API_URL = os.getenv("EAPI_API_URL")
+EAPI_API_URL = "localhost:3000"  # os.getenv("EAPI_API_URL")
 if EAPI_API_URL is None:
     raise RuntimeError("EAPI_API_URL environment variable not set.")
 
@@ -44,6 +45,30 @@ def toggle_manual_weights_form(method):
         return "visible"
 
     return "hidden"
+
+
+@app.callback(
+    [Output("analog_daterange", "start_date"), Output("analog_daterange", "end_date"),],
+    [Input("analog_date_check", "value")],
+)
+def update_analog_date(nonce):
+    current_date = dt.now()
+    analog_start_default = current_date - relativedelta(months=3)
+    analog_end_default = current_date - relativedelta(months=1)
+    return analog_start_default, analog_end_default
+
+
+@app.callback(
+    [
+        Output("forecast_daterange", "start_date"),
+        Output("forecast_daterange", "end_date"),
+    ],
+    [Input("forecast_date_check", "value")],
+)
+def update_forecast_date(nonce):
+    current_date = dt.now()
+    forecast_end_default = current_date + relativedelta(months=2)
+    return current_date, forecast_end_default
 
 
 # Not exposed in current version of app.

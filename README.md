@@ -1,4 +1,4 @@
-# Daily fire tally visualization app
+# Analog Forecast GUI App
 
 ## Structure
 
