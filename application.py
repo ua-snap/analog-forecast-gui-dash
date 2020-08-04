@@ -68,6 +68,7 @@ def update_analog_date(nonce):
         last_day_of_last_month = current_date.replace(
             month=(current_date.month - 1)
         ) + relativedelta(day=31)
+
         return analog_start_default, analog_end_default, last_day_of_last_month
     else:
         analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
@@ -79,6 +80,7 @@ def update_analog_date(nonce):
         last_day_of_month_before_last = current_date.replace(
             month=(current_date.month - 2)
         ) + relativedelta(day=31)
+
         return analog_start_default, analog_end_default, last_day_of_month_before_last
 
 
