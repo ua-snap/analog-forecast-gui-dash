@@ -19,6 +19,7 @@ current_date = datetime.now()
 analog_start_default = current_date - relativedelta(months=3)
 analog_end_default = current_date - relativedelta(months=1)
 forecast_end_default = current_date + relativedelta(months=2)
+max_analog_date_allowed = current_date
 
 # For hosting
 path_prefix = os.getenv("REQUESTS_PATHNAME_PREFIX") or "/"
@@ -146,6 +147,7 @@ analog_temporal_daterange = html.Div(
                 id="analog_daterange",
                 display_format="MMMM YYYY",
                 min_date_allowed=datetime(1950, 1, 1),
+                max_date_allowed=max_analog_date_allowed,
                 start_date=analog_start_default,
                 end_date=analog_end_default,
             ),

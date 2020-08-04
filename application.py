@@ -14,6 +14,7 @@ import os
 import re
 import urllib.parse
 from datetime import datetime as dt
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 import dash
 from dash.dependencies import Input, Output
@@ -48,14 +49,37 @@ def toggle_manual_weights_form(method):
 
 
 @app.callback(
-    [Output("analog_daterange", "start_date"), Output("analog_daterange", "end_date"),],
+    [
+        Output("analog_daterange", "start_date"),
+        Output("analog_daterange", "end_date"),
+        Output("analog_daterange", "max_date_allowed"),
+    ],
     [Input("analog_date_check", "value")],
 )
 def update_analog_date(nonce):
     current_date = dt.now()
-    analog_start_default = current_date - relativedelta(months=3)
-    analog_end_default = current_date - relativedelta(months=1)
-    return analog_start_default, analog_end_default
+    if current_date.day > 10:
+        analog_start_default = current_date.replace(day=1) - relativedelta(months=3)
+        analog_end_default = (
+            current_date - relativedelta(months=1) + relativedelta(day=31)
+        )
+
+        # Trick to get last day of any month for maximum date
+        last_day_of_last_month = current_date.replace(
+            month=(current_date.month - 1)
+        ) + relativedelta(day=31)
+        return analog_start_default, analog_end_default, last_day_of_last_month
+    else:
+        analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
+        analog_end_default = (
+            current_date - relativedelta(months=2) + relativedelta(day=31)
+        )
+
+        # Trick to get last day of any month for maximum date
+        last_day_of_month_before_last = current_date.replace(
+            month=(current_date.month - 2)
+        ) + relativedelta(day=31)
+        return analog_start_default, analog_end_default, last_day_of_month_before_last
 
 
 @app.callback(
