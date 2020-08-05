@@ -311,7 +311,7 @@ center_column = [
 left_column = [
     html.H5("Analog match search area & time", className="title is-5"),
     html.P(
-        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.    Longitudes go from 0-360.",
+        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.    Longitudes go from 0-360 E.",
         className="content is-size-6",
     ),
     analog_bbox_fields,
