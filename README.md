@@ -15,7 +15,7 @@ After cloning this template, run it this way:
 pipenv install
 export FLASK_APP=application.py
 export FLASK_DEBUG=True
-export EAPI_API_URL=http://localhost:3000
+export EAPI_API_URL=http://phoebe.snap.uaf.edu:3000
 pipenv run flask run
 ```
 
@@ -23,7 +23,9 @@ The project is run through Flask and will be available at [http://localhost:5000
 
 Env vars which must be set:
 
- * `EAPI_API_URL` - URL for API.
+ * `EAPI_API_URL` - URL for API. 
+ 
+ Production instance of EAPI API is running at: http://phoebe.snap.uaf.edu:3000
 
 ## Deploying to AWS Elastic Beanstalk:
 
