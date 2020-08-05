@@ -62,9 +62,7 @@ def update_analog_date(nonce):
         analog_start_default = current_date.replace(day=1) - relativedelta(months=3)
 
         # Trick to get last day of any month for maximum date
-        analog_end_default = (
-            current_date - relativedelta(months=1) + relativedelta(day=31)
-        )
+        analog_end_default = current_date.replace(day=2) - relativedelta(months=1)
 
         # Return analog_end_default twice for end date and maximum end date
         return analog_start_default, analog_end_default, analog_end_default
@@ -72,9 +70,7 @@ def update_analog_date(nonce):
         analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
 
         # Trick to get last day of any month for maximum date
-        analog_end_default = (
-            current_date - relativedelta(months=2) + relativedelta(day=31)
-        )
+        analog_end_default = current_date.replace(day=2) - relativedelta(months=2)
 
         # Return analog_end_default twice for end date and maximum end date
         return analog_start_default, analog_end_default, analog_end_default
