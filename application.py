@@ -60,16 +60,12 @@ def update_analog_date(nonce):
     current_date = dt.now()
     if current_date.day > 10:
         analog_start_default = current_date.replace(day=1) - relativedelta(months=3)
-
-        # Trick to get last day of any month for maximum date
         analog_end_default = current_date.replace(day=2) - relativedelta(months=1)
 
         # Return analog_end_default twice for end date and maximum end date
         return analog_start_default, analog_end_default, analog_end_default
     else:
         analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
-
-        # Trick to get last day of any month for maximum date
         analog_end_default = current_date.replace(day=2) - relativedelta(months=2)
 
         # Return analog_end_default twice for end date and maximum end date
