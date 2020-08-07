@@ -74,11 +74,11 @@ index_string = f"""
 # x-ref manual_weights if updating this to keep
 # text aligned.
 forecast_themes = {
-    "SLP": 1,
+    "Sea level pressure": 1,
     "Pressure level height": 2,
     "2-meter temps": 3,
     "Pressure level temp": 4,
-    "SST": 5,
+    "Sea surface temperature": 5,
     "Precip": 6,
 }
 
