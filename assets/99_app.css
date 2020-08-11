@@ -11,7 +11,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Clamp narrative text to some sane width. */
 .narrow {
-	max-width: 40rem;
+	max-width: 50rem;
 }
 
 .visible {
@@ -22,10 +22,6 @@ h1, h2, h3, h4, h5, h6 {
 	display: none;
 }
 
-/* Give the form controls some breathing room before the footer */
-div.columns {
-	padding-bottom: 4rem;
-}
 
 #analog_date_check, #forecast_date_check {
     display: none;

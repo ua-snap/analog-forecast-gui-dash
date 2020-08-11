@@ -97,7 +97,12 @@ about = wrap_in_section(
         ddsih.DangerouslySetInnerHTML(
             f"""
 <h1 class="title is-3">{luts.title}</h1>
+
+<p>This tool uses current atmospheric and sea surface temperature to identify the five best historical matches (analogs) as far back as 1949.  The analog identification is based on up to six variables from a current atmospheric reanalysis: surface air temperature, sea level pressure, precipitation, upper-air pressure (geopotential height), upper-air temperature, and sea surface temperature.</p>
+<p>The tool then provides a forecast based on how the weather patterns evolved in those analog years.  The forecasts are for 1 to 12 months into the future.  Users specify the areas from which the analogs are determined.  The areas can include the Arctic, middle latitudes, and even tropics, where ocean temperatures and pressures correlate with future weather over large parts of the Northern Hemisphere. The area covered by the forecast is also selected by the user, and it can be different from the area of the predictors.</p>
+<p><strong>This tool is designed for trained professionals and others with experience in the use of climate data for planning.  It can also be used by broader audiences who are familiar with atmospheric data and who understand the limitations of the analog method of forecasting.</p>
 <p>Date ranges can be chosen with the popup calendar <strong>or by typing in the boxes directly</strong>.  Only month/year is used for analysis purposes.</p>
+
 """
         )
     ],
@@ -300,7 +305,7 @@ manual_match_fields_wrapper = html.Div(
 center_column = [
     html.H5("Forecast theme, area, and time span", className="title is-5"),
     html.P(
-        "Forecast area defaults to approximately the spatial extent of Alaska.",
+        "Forecast area defaults to approximately the spatial extent of Alaska. Longitudes go from 0-360E, and latitudes go from 0-90N.",
         className="content is-size-6",
     ),
     forecast_theme_control,
@@ -311,7 +316,7 @@ center_column = [
 left_column = [
     html.H5("Analog match search area & time", className="title is-5"),
     html.P(
-        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.    Longitudes go from 0-360 E.",
+        "The analog match search area is the spatial region that is analyzed for statistical matches.  This defaults to a region in the South Pacific which was empirically determined to correlate well with Alaska.    Longitudes go from 0-360E, and latitudes go from 0-90N.",
         className="content is-size-6",
     ),
     analog_bbox_fields,
@@ -362,6 +367,34 @@ main_section = html.Div(
     ]
 )
 
+about_data = wrap_in_section(
+    [
+        ddsih.DangerouslySetInnerHTML(
+            f"""
+<h2 class="title is-3">About this tool</h2>
+<h3 class="title is-4">Data source</h3>
+<p>The data comes from the NCEI/NCAR R1 reanalysis [RT]. Although now superseded by more modern reanalysis, R1 is used because it offers the longest period of record (since 1949) and is kept up to date.</p>
+
+<h3 class="title is-4">What algorithm is used?</h3>
+
+<p>The criterion for the selection of the analogs is the closeness of the match to the present atmospheric conditions over the area selected by the user.  The metric of the closeness of fit is the root-mean-square difference (current state minus analog candidate) of the predictor variables summed over all grid points in the user-selected area of the predictor variables.</p>
+
+<h3 class="title is-4">Credits & source code</h3>
+
+<p>Brian Brettschneider with the <a href="https://uaf-accap.org">Alaska Center for Climate Assessment and Policy</a> (ACCAP) developed the science and code for this tool.  Brian now works with the National Weather Service, Anchorage.</p>
+
+<p>Source code is available on Github:</p>
+<ul>
+<li><a href="https://github.com/ua-snap/analog-forecast-gui-dash">Front-end user interface code</a> (this page)</li>
+<li><a href="https://github.com/ua-snap/eapi-api">API code</a>.  The API takes information from the user interface and executes the NCL scientific code and presents results.</li>
+<li><a href="https://github.com/ua-snap/eapi-analogs">Scientific processing code</a>.  This is the original source code which contains the NCL processing scripts.</li>
+</ul>
+
+"""
+        )
+    ],
+    div_classes="content is-size-5 narrow",
+)
 footer = html.Footer(
     className="footer",
     children=[
@@ -371,7 +404,7 @@ footer = html.Footer(
     <div class="wrapper is-size-6">
         <img src="{path_prefix}assets/UAF.svg"/>
         <div class="wrapped">
-            <p>The Experimental Analog Forecast Tool was developed was developed by Rick Thoman and Brian Brettschneider from data provided by the National Weather Service ASOS system. This website was developed by the <a href="https://uaf-accap.org/">Alaska Center for Climate Assessment and Policy (ACCAP)</a> and the <a href="https://www.snap.uaf.edu/" title="👍">Scenarios Network for Alaska and Arctic Planning (SNAP)</a>, research groups at the <a href="https://uaf-iarc.org/">International Arctic Research Center (IARC)</a> at the <a href="https://uaf.edu/uaf/">University of Alaska Fairbanks (UAF)</a>.</p>
+            <p>The Experimental Analog Forecast Tool was developed was developed by Brian Brettschneider at the <a href="https://uaf-accap.org">Alaska Center for Climate Assessment and Policy</a> (ACCAP), and the work was also supported by the <a href="https://cpo.noaa.gov">NOAA Climate Program Office.</a>  This website was developed by <a href="https://uaf-accap.org/">ACCAP</a> and the <a href="https://www.snap.uaf.edu/" title="👍">Scenarios Network for Alaska and Arctic Planning</a> (SNAP), research groups at the <a href="https://uaf-iarc.org/">International Arctic Research Center</a> (IARC) at the <a href="https://uaf.edu/uaf/">University of Alaska Fairbanks</a>.</p>
             <p>Copyright &copy; {current_year} University of Alaska Fairbanks.  All rights reserved.</p>
             <p>UA is an AA/EO employer and educational institution and prohibits illegal discrimination against any individual.  <a href="https://www.alaska.edu/nondiscrimination/">Statement of Nondiscrimination</a></p>
         </div>
@@ -383,4 +416,4 @@ footer = html.Footer(
 )
 
 
-layout = html.Div(children=[header, about, main_section, footer])
+layout = html.Div(children=[header, about, main_section, about_data, footer])
