@@ -373,7 +373,7 @@ about_data = wrap_in_section(
             f"""
 <h2 class="title is-3">About this tool</h2>
 <h3 class="title is-4">Data source</h3>
-<p>The data comes from the NCEI/NCAR R1 reanalysis [RT]. Although now superseded by more modern reanalysis, R1 is used because it offers the longest period of record (since 1949) and is kept up to date.</p>
+<p>The data comes from the NCEI/NCAR R1 reanalysis. Although now superseded by more modern reanalysis, R1 is used because it offers the longest period of record (since 1949) and is kept up to date.</p>
 
 <h3 class="title is-4">What algorithm is used?</h3>
 
