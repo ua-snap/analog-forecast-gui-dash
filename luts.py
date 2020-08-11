@@ -76,10 +76,10 @@ index_string = f"""
 forecast_themes = {
     "Sea level pressure": 1,
     "Pressure level height": 2,
-    "2-meter temps": 3,
-    "Pressure level temp": 4,
+    "2-meter temperatures": 3,
+    "Pressure level temperatures": 4,
     "Sea surface temperature": 5,
-    "Precip": 6,
+    "Precipitation": 6,
 }
 
 correlations = {
