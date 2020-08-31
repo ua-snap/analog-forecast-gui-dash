@@ -66,7 +66,7 @@ header = ddsih.DangerouslySetInnerHTML(
 
   <div class="navbar-brand">
     <a class="navbar-item" href="https://uaf-iarc.org">
-      <img src="{path_prefix}assets/IARC_globe_color.svg">
+      <img src="{path_prefix}assets/IARC_2020_color_horiz.svg">
     </a>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -80,7 +80,7 @@ header = ddsih.DangerouslySetInnerHTML(
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a target="_blank" rel="noopener noreferrer" href="https://uaf-iarc.typeform.com/to/mN7J5cCK#tool=Experimental%20Analog%20Forecast" class="button is-link">
+          <a target="_blank" rel="noopener noreferrer" href="https://uaf-iarc.typeform.com/to/mN7J5cCK#tool=Analog%20Forecast" class="button is-link">
             <strong>Feedback</strong>
           </a>
         </div>
@@ -203,6 +203,29 @@ num_of_analogs = wrap_in_field(
     className="hidden",
 )
 
+pressure_height = wrap_in_field(
+    "Pressure level for height analysis",
+    dcc.Dropdown(
+        id="pressure_height",
+        options=[
+            {"label": label, "value": value}
+            for value, label in luts.pressure_levels.items()
+        ],
+        value=5,
+    ),
+)
+
+pressure_temp = wrap_in_field(
+    "Pressure level for temperature analysis",
+    dcc.Dropdown(
+        id="pressure_temp",
+        options=[
+            {"label": label, "value": value}
+            for value, label in luts.pressure_levels.items()
+        ],
+        value=5,
+    ),
+)
 # Not exposed in current version of app.
 correlations_control = wrap_in_field(
     "Just plot correlations?",
@@ -328,6 +351,8 @@ left_column = [
     override_years,
     manual_match_fields_wrapper,
     if_detrend_data,
+    pressure_height,
+    pressure_temp,
 ]
 
 right_column = [
@@ -404,7 +429,7 @@ footer = html.Footer(
     <div class="wrapper is-size-6">
         <img src="{path_prefix}assets/UAF.svg"/>
         <div class="wrapped">
-            <p>The Experimental Analog Forecast Tool was developed was developed by Brian Brettschneider at the <a href="https://uaf-accap.org">Alaska Center for Climate Assessment and Policy</a> (ACCAP), and the work was also supported by the <a href="https://cpo.noaa.gov">NOAA Climate Program Office.</a>  This website was developed by the <a href="https://uaf-accap.org/">ACCAP</a> and the <a href="https://www.snap.uaf.edu/" title="👍">Scenarios Network for Alaska and Arctic Planning</a> (SNAP), research groups at the <a href="https://uaf-iarc.org/">International Arctic Research Center</a> (IARC) at the <a href="https://uaf.edu/uaf/">University of Alaska Fairbanks</a>.</p>
+        <p>Multiple individuals and groups supported the development of the Analog Forecast Tool. Brian Brettschneider developed the science and code for the tool, with guidance from the National Weather Service Alaska Region and <a href="https://uaf-accap.org">Alaska Center for Climate Assessment and Policy</a> (ACCAP). Website development was supported by ACCAP and the <a href="https://www.snap.uaf.edu/" title="👍">Scenarios Network for Alaska and Arctic Planning</a> (SNAP). Financial support for the tool was provided by the <a href="https://cpo.noaa.gov">NOAA Climate Program Office</a>, <a href="https://sites.google.com/alaska.edu/eapi">Experimental Arctic Prediction Initiative</a>, and ACCAP.</p>
             <p>Copyright &copy; {current_year} University of Alaska Fairbanks.  All rights reserved.</p>
             <p>UA is an AA/EO employer and educational institution and prohibits illegal discrimination against any individual.  <a href="https://www.alaska.edu/nondiscrimination/">Statement of Nondiscrimination</a></p>
         </div>

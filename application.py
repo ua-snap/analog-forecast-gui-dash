@@ -138,6 +138,8 @@ def ymd_from_dash(d):
         Input("override-year-4", "value"),
         Input("override-year-5", "value"),
         Input("detrend-data", "value"),
+        Input("pressure_height", "value"),
+        Input("pressure_temp", "value"),
     ],
 )
 def update_api_url(
@@ -169,6 +171,8 @@ def update_api_url(
     override_year_4,
     override_year_5,
     detrend_data,
+    pressure_height,
+    pressure_temp,
 ):
     """ Build API URL string from GUI """
     params = urllib.parse.urlencode(
@@ -201,6 +205,8 @@ def update_api_url(
             override_year_4=override_year_4,
             override_year_5=override_year_5,
             detrend_data=detrend_data,
+            pressure_height=pressure_height,
+            pressure_temp=pressure_temp,
         )
     )
     url = EAPI_API_URL + "/forecast?" + params
