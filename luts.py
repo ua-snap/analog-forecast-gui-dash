@@ -5,7 +5,7 @@ Common shared text strings and lookup tables.
 import os
 from datetime import date
 
-title = "Experimental Analog Forecast Tool"
+title = "Analog Forecast Tool"
 url = "http://snap.uaf.edu/tools/demo"
 preview = "http://snap.uaf.edu/tools/demo/assets/preview.png"
 description = "Run an analog forecast tool to see future forecasts from past data."
@@ -74,19 +74,19 @@ index_string = f"""
 # x-ref manual_weights if updating this to keep
 # text aligned.
 forecast_themes = {
-    "SLP": 1,
+    "Sea level pressure": 1,
     "Pressure level height": 2,
-    "2-meter temps": 3,
-    "Pressure level temp": 4,
-    "SST": 5,
-    "Precip": 6,
+    "2-meter temperatures": 3,
+    "Pressure level temperatures": 4,
+    "Sea surface temperature": 5,
+    "Precipitation": 6,
 }
 
 correlations = {
     "No": 0,
     "R-Value Maps": 1,
     "R2-Value Maps": 2,
-    "Multiple R Correlation": 3
+    "Multiple R Correlation": 3,
 }
 
 # Selection for manual weighting
@@ -99,4 +99,12 @@ manual_weights = {
     "2-meter temps": dict(default=0, idx=3),
     "Pressure level temp": dict(default=0, idx=4),
     "SST": dict(default=0, idx=5),
+}
+
+# These correlate to the custom ncar library file BB_Utils,
+# in the function getlev()
+pressure_levels = {
+    1: "925mb",
+    5: "500mb",
+    9: "200mb"
 }
