@@ -427,7 +427,7 @@ about_data = wrap_in_section(
 <p>Fourth, climate conditions in the forecast area during the forecast period are returned for each of the top five years by match score calculated during step 2. These display what the climate conditions looked like in the forecast area when conditions in the search area were similar to conditions during the search period.</p>
 <p>Finally, the conditions returned during the top five match years in the forecast area are averaged to produce a composite forecast for the forecast period. This is a prediction of what climate conditions may look like in the forecast area during the forecast period based on conditions in the search area, during the search period.</p>
 <div class="diagram">
-<img src="{path_prefix}assets/explainer.svg"/>
+<img src="{path_prefix}assets/AnalogForecastExplainerGraphic.jpg"/>
 </div>
 <h4 class="title is-5">Auto&ndash;weighting process</h4>
 <p>The Root Mean Squared Error is computed for each variable and each year, which is then weighted for each variable according to the predictive power of that variable for the parameters input. The weight for each variable is determined by an algorithm developed by the tool’s initial developer Brian Brettschneider.  For each of the 5 variables a standard anomaly transformation is conducted with all values having 5.0 subtracted from them to retain the distinction between positive and negative values. RMSE with climatology is then conducted for each variable and eventually pattern match scores (RMSEs) of the forecast area compared to climatology are then built.</p>
