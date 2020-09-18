@@ -13,11 +13,12 @@ minimum.
 import os
 import re
 import urllib.parse
-from datetime import datetime as dt
+from datetime import datetime
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 import dash
 from dash.dependencies import Input, Output
+import dash_html_components as html
 import luts
 from gui import layout, path_prefix
 
@@ -49,40 +50,143 @@ def toggle_manual_weights_form(method):
 
 
 @app.callback(
-    [
-        Output("analog_daterange", "start_date"),
-        Output("analog_daterange", "end_date"),
-        Output("analog_daterange", "max_date_allowed"),
-    ],
-    [Input("analog_date_check", "value")],
+    Output("analog-start-date", "value"),
+    [Input("analog-start-month", "value"), Input("analog-start-year", "value"),],
 )
-def update_analog_date(nonce):
-    current_date = dt.now()
-    if current_date.day > 10:
-        analog_start_default = current_date.replace(day=1) - relativedelta(months=3)
-        analog_end_default = current_date.replace(day=2) - relativedelta(months=1)
+def update_analog_start_date(month, year):
+    return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
 
-        # Return analog_end_default twice for end date and maximum end date
-        return analog_start_default, analog_end_default, analog_end_default
-    else:
-        analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
-        analog_end_default = current_date.replace(day=2) - relativedelta(months=2)
 
-        # Return analog_end_default twice for end date and maximum end date
-        return analog_start_default, analog_end_default, analog_end_default
+@app.callback(
+    Output("analog-end-date", "value"),
+    [Input("analog-end-month", "value"), Input("analog-end-year", "value"),],
+)
+def update_analog_end_date(month, year):
+    return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
+
+
+@app.callback(
+    Output("forecast-start-date", "value"),
+    [Input("forecast-start-month", "value"), Input("forecast-start-year", "value"),],
+)
+def update_forecast_start_date(month, year):
+    return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
+
+
+@app.callback(
+    Output("forecast-end-date", "value"),
+    [Input("forecast-end-month", "value"), Input("forecast-end-year", "value"),],
+)
+def update_forecast_end_date(month, year):
+    return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
+
+
+def datetime_from_input(date):
+    """ Tiny helper to convert from string to datetime. """
+    return datetime.strptime(date, "%Y-%m-%d")
 
 
 @app.callback(
     [
-        Output("forecast_daterange", "start_date"),
-        Output("forecast_daterange", "end_date"),
+        Output("analog-daterange-validation", "children"),
+        Output("forecast-daterange-validation", "children"),
+        Output("submit-validation", "children"),
+        Output("api-button", "disabled"),
     ],
-    [Input("forecast_date_check", "value")],
+    [
+        Input("analog-start-date", "value"),
+        Input("analog-end-date", "value"),
+        Input("forecast-start-date", "value"),
+        Input("forecast-end-date", "value"),
+    ],
 )
-def update_forecast_date(nonce):
-    current_date = dt.now()
-    forecast_end_default = current_date + relativedelta(months=2)
-    return current_date, forecast_end_default
+def validate_analog_dates(analog_start, analog_end, forecast_start, forecast_end):
+    """
+    Test the analog date spans.  If invalid, let the user know.
+
+    Rules to test for Analogs:
+        1. start date must not be after end date
+        2. start date must be no more than 12 months before date.
+        3. end date must be equal to or less than the current data
+        availability date.
+        4. end date must come before the forecast start date.
+    Rules to test for Forecast:
+        5. start date must not be after end date
+        6. end month must be <= 12 months after start date
+    """
+    analog_start = datetime_from_input(analog_start)
+    analog_end = datetime_from_input(analog_end)
+    forecast_start = datetime_from_input(forecast_start)
+    forecast_end = datetime_from_input(forecast_end)
+    default_start_date, default_end_date = luts.get_default_analog_daterange()
+    general_error = html.Span(
+        "Please fix the invalid configurations elsewhere on this page before running this forecast."
+    )
+
+    # Case 3
+    if analog_end > default_end_date:
+        return (
+            html.Span(
+                "⚠️ Data aren't available after {}.  Please change the start date to be no later than that.".format(
+                    default_start_date.strftime("%B, %Y")
+                )
+            ),
+            None,
+            general_error,
+            "disabled",
+        )
+
+    # Case 1
+    if analog_start > analog_end:
+        return (
+            html.Span(
+                "⚠️ The start date must come before, or be the same as, the end date."
+            ),
+            None,
+            general_error,
+            "disabled",
+        )
+
+    # Case 2
+    if analog_start < (analog_end - relativedelta(months=12)):
+        return (
+            html.Span("⚠️ Analog search range can only be up to 12 months total."),
+            None,
+            general_error,
+            "disabled",
+        )
+
+    # Case 4
+    if analog_end >= forecast_start:
+        return (
+            html.Span("⚠️ Analog search range must end before the start of the forecast date range."),
+            None,
+            general_error,
+            "disabled",
+        )
+
+    # Case 5
+    if forecast_start > forecast_end:
+        return (
+            None,
+            html.Span(
+                "⚠️ The start date must come before, or be the same as, the end date."
+            ),
+            general_error,
+            "disabled",
+        )
+
+    # Case 6
+    if forecast_start < (forecast_end - relativedelta(months=12)):
+        return (
+            None,
+            html.Span("⚠️ Forecast range can only be up to 12 months total."),
+            general_error,
+            "disabled",
+        )
+
+    # 🏁 Valid!
+    return None, None, None, False
 
 
 # Not exposed in current version of app.
@@ -100,15 +204,9 @@ def toggle_manual_match_form(method):
     return "hidden"
 
 
-def ymd_from_dash(d):
-    """ Helper function to return Y-m-d from Dash date GUI picker """
-    date = dt.strptime(re.split("T| ", d)[0], "%Y-%m-%d")
-    return date.strftime("%Y-%m-%d")
-
-
 # The next piece is slightly painful but at least it's explicit.
 @app.callback(
-    Output("api-button", "href"),
+    Output("api-button", "formAction"),
     [
         Input("analog_bbox_n", "value"),
         Input("analog_bbox_w", "value"),
@@ -118,10 +216,10 @@ def ymd_from_dash(d):
         Input("forecast_bbox_w", "value"),
         Input("forecast_bbox_e", "value"),
         Input("forecast_bbox_s", "value"),
-        Input("analog_daterange", "start_date"),
-        Input("analog_daterange", "end_date"),
-        Input("forecast_daterange", "start_date"),
-        Input("forecast_daterange", "end_date"),
+        Input("analog-start-date", "value"),
+        Input("analog-end-date", "value"),
+        Input("forecast-start-date", "value"),
+        Input("forecast-end-date", "value"),
         Input("num_analogs", "value"),
         Input("forecast-theme", "value"),
         Input("auto-weight", "value"),
@@ -151,10 +249,10 @@ def update_api_url(
     forecast_bbox_w,
     forecast_bbox_e,
     forecast_bbox_s,
-    analog_daterange_start,
-    analog_daterange_end,
-    forecast_daterange_start,
-    forecast_daterange_end,
+    analog_start_date,
+    analog_end_date,
+    forecast_start_date,
+    forecast_end_date,
     num_analogs,
     forecast_theme,
     auto_weight,
@@ -185,10 +283,10 @@ def update_api_url(
             forecast_bbox_w=forecast_bbox_w,
             forecast_bbox_e=forecast_bbox_e,
             forecast_bbox_s=forecast_bbox_s,
-            analog_daterange_start=ymd_from_dash(analog_daterange_start),
-            analog_daterange_end=ymd_from_dash(analog_daterange_end),
-            forecast_daterange_start=ymd_from_dash(forecast_daterange_start),
-            forecast_daterange_end=ymd_from_dash(forecast_daterange_end),
+            analog_daterange_start=analog_start_date,
+            analog_daterange_end=analog_end_date,
+            forecast_daterange_start=forecast_start_date,
+            forecast_daterange_end=forecast_end_date,
             num_analogs=num_analogs,
             forecast_theme=forecast_theme,
             auto_weight=auto_weight,

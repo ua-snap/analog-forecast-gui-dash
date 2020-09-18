@@ -3,7 +3,8 @@
 Common shared text strings and lookup tables.
 """
 import os
-from datetime import date
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 title = "Analog Forecast Tool"
 url = "http://snap.uaf.edu/tools/demo"
@@ -90,7 +91,7 @@ correlations = {
 }
 
 # Selection for manual weighting
-# TODO: x-ref `forecast_themes` to keep text aligned
+# TODO: x-ref `forecast_themes` to keep text aligned(?)
 # idx refers to the number that is postfixed to the control
 # to get a unique element ID to process for the API
 manual_weights = {
@@ -103,8 +104,30 @@ manual_weights = {
 
 # These correlate to the custom ncar library file BB_Utils,
 # in the function getlev()
-pressure_levels = {
-    1: "925mb",
-    5: "500mb",
-    9: "200mb"
-}
+pressure_levels = {1: "925mb", 5: "500mb", 9: "200mb"}
+
+months = {i: datetime(2020, i, 1).strftime("%B") for i in range(1, 13)}
+
+analog_years = []
+for i in range(1949, datetime.now().year + 1):
+    analog_years.append(i)
+
+# This and next year.
+forecast_years = []
+for i in range(1949, datetime.now().year + 2):
+    forecast_years.append(i)
+
+def get_default_analog_daterange():
+    """
+    Data are available after the 10th each month.
+    So, until then, the most-current-available-month is
+    the prior month.
+    """
+    current_date = datetime.now()
+    if current_date.day > 10:
+        analog_start_default = current_date.replace(day=1) - relativedelta(months=3)
+        analog_end_default = current_date.replace(day=2) - relativedelta(months=1)
+    else:
+        analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
+        analog_end_default = current_date.replace(day=2) - relativedelta(months=2)
+    return analog_start_default, analog_end_default

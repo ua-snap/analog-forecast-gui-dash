@@ -1,128 +1,168 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&subset=latin-ext');
 @import url('https://fonts.googleapis.com/css?family=Cardo:400,400i,700&subset=latin-ext');
 
-html, body {
-	font-family: 'Cardo';
+html,
+body {
+  font-family: 'Cardo', serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-	font-family: 'Open Sans';
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* hide up/down arrows ("spinners") on input fields marked type="number" */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Clamp narrative text to some sane width. */
 .narrow {
-	max-width: 50rem;
+  max-width: 50rem;
 }
 
 .visible {
-	display: block;
+  display: block;
 }
 
 .hidden {
-	display: none;
-}
-
-
-#analog_date_check, #forecast_date_check {
-    display: none;
+  display: none;
 }
 
 /* Fix the Dash styling here */
 .DateInput_input {
-	font-size: .9rem;
-	line-height: 1;
-	font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.Select-clear-zone {
+  display: none;
 }
 
 .button.is-primary {
-	color: #333;
-	background-color: #D6E6ED;
+  color: #333;
+  background-color: #d6e6ed;
 }
+
 .button.is-primary:hover {
-	color: white;
-	background-color: #4C6C71;
+  color: white;
+  background-color: #4c6c71;
+}
+
+.validation span {
+  border: 1px solid #ff3d00;
+  background-color: #fee;
+  font-weight: bold;
+  padding: 0.5rem;
+  display: block;
+  margin: 1rem 0;
 }
 
 nav.navbar {
-	border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 
 nav .navbar-brand img {
-	max-height: 5rem;
-	height: 5rem;
+  max-height: 5rem;
+  height: 5rem;
 }
 
 .camera-icon span {
-	display: inline-block;
-	position: relative;
-	top: 0.25rem;
-	padding: 0 3px;
+  display: inline-block;
+  position: relative;
+  top: 0.25rem;
+  padding: 0 3px;
 }
+
 .camera-icon span path {
-	fill: #ccc;
+  fill: #ccc;
 }
 
 /* Override Bulma for some field layouts to condense them. */
 .label:not(:last-child) {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
-input[type=checkbox], input[type=radio] {
-	margin-right: .5rem;
+
+input[type=checkbox],
+input[type=radio] {
+  margin-right: 0.5rem;
 }
-#auto-weight label, #manual-match label, #detrend-data label {
-	margin-right: 1.5rem;
+
+#auto-weight label,
+#manual-match label,
+#detrend-data label {
+  margin-right: 1.5rem;
 }
+
 input[type="number"] {
-	max-width: 3rem;
+  max-width: 3rem;
 }
+
 .inline {
-	display: inline-block;
-	padding-right: 1rem;
-	/*float: left;*/
+  display: inline-block;
+  padding-right: 1rem;
 }
+
+.inline-date {
+  display: inline-block;
+  width: 8rem;
+  padding-right: 1rem;
+}
+
 h5.subtitle.is-5 {
-	margin-top: 2rem;
-	margin-bottom: .5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .dash-dropdown {
-	max-width: 15rem;
+  max-width: 15rem;
 }
 
-#manual-weights-form-wrapper, #manual-match-form-wrapper {
-	padding: 0 1rem 2rem 2rem;
+#manual-weights-form-wrapper,
+#manual-match-form-wrapper {
+  padding: 0 1rem 2rem 2rem;
 }
 
 .footer {
-    box-shadow: inset 0 7px 9px -7px rgba(0,0,0,0.4);
-    font-family: "Open Sans";
+  box-shadow: inset 0 7px 9px -7px rgba(0, 0, 0, 0.4);
+  font-family: "Open Sans", sans-serif;
 }
 
 .footer div.wrapper {
-        margin: 2rem auto;
-        display: flex;
-        height: 8rem;
-        max-height: 8rem;
+  margin: 2rem auto;
+  display: flex;
+  height: 8rem;
+  max-height: 8rem;
 }
 
-
 .footer img {
-        min-width: 12.5vw;
-        max-width: 150px;
-        padding: 0 1rem;
-        display: block;
-        position: relative;
-        top: .25rem;
-        object-fit: contain;
-    align-self: flex-start;
+  min-width: 12.5vw;
+  max-width: 150px;
+  padding: 0 1rem;
+  display: block;
+  position: relative;
+  top: 0.25rem;
+  object-fit: contain;
+  align-self: flex-start;
 }
 
 .footer p {
-        text-align: left;
-        font-size: 0.95rem;
-        margin: 0 1rem 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  margin: 0 1rem 1rem;
 }
 
 .footer div.wrapped {
-        flex: 1 1 auto;
+  flex: 1 1 auto;
 }
