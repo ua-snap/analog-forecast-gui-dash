@@ -387,7 +387,7 @@ Clicking the button below will open a new window that will run the analog foreca
         type="submit",
         formTarget="_blank",
         formAction="#",
-        formMethod="GET"
+        formMethod="POST"
     ),
 ]
 
