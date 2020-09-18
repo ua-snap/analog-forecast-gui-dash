@@ -16,8 +16,7 @@ current_year = datetime.now().year
 
 # Compute default date ranges.
 current_date = datetime.now()
-analog_start_default = current_date - relativedelta(months=3)
-analog_end_default = current_date - relativedelta(months=1)
+analog_start_default, analog_end_default = luts.get_default_analog_daterange()
 forecast_end_default = current_date + relativedelta(months=2)
 max_analog_date_allowed = current_date
 
@@ -144,40 +143,54 @@ forecast_bbox_fields = html.Div(
 )
 
 
+def get_month_year_widget(name, id, years, default):
+    return html.Div(
+        children=[
+            wrap_in_field(
+                name + " month",
+                dcc.Dropdown(
+                    id=id + "-month",
+                    options=[
+                        {"label": month, "value": number}
+                        for number, month in luts.months.items()
+                    ],
+                    value=default.month,
+                ),
+                "inline-date",
+            ),
+            wrap_in_field(
+                name + " year",
+                dcc.Dropdown(
+                    id=id + "-year",
+                    options=[{"label": year, "value": year} for year in years],
+                    value=default.year,
+                ),
+                "inline-date",
+            ),
+            dcc.Input(id=id+"-date",className="hidden",value=default.strftime("%Y-%m-%d"))
+        ]
+    )
+
+
+analog_temporal_start = get_month_year_widget(
+    "Start", "analog-start", luts.analog_years, analog_start_default
+)
+analog_temporal_end = get_month_year_widget(
+    "End", "analog-end", luts.analog_years, analog_end_default
+)
 analog_temporal_daterange = html.Div(
-    children=[
-        wrap_in_field(
-            "Date range for analog search",
-            dcc.DatePickerRange(
-                id="analog_daterange",
-                display_format="MMMM YYYY",
-                min_date_allowed=datetime(1950, 1, 1),
-                max_date_allowed=max_analog_date_allowed,
-                start_date=analog_start_default,
-                end_date=analog_end_default,
-            ),
-        ),
-        dcc.Input(id="analog_date_check", type="text", placeholder="analog_date"),
-    ]
+    children=[analog_temporal_start, analog_temporal_end],
+    className="temporal-daterange",
 )
-
+forecast_temporal_start = get_month_year_widget(
+    "Start", "forecast-start", luts.forecast_years, current_date
+)
+forecast_temporal_end = get_month_year_widget(
+    "End", "forecast-end", luts.forecast_years, forecast_end_default
+)
 forecast_temporal_daterange = html.Div(
-    children=[
-        wrap_in_field(
-            "Date range for forecast",
-            dcc.DatePickerRange(
-                id="forecast_daterange",
-                display_format="MMMM YYYY",
-                start_date=current_date,
-                end_date=forecast_end_default,
-            ),
-        ),
-        dcc.Input(id="forecast_date_check", type="text", placeholder="forecast_date"),
-    ]
-)
-
-temporal_range_form = wrap_in_section(
-    [html.H3("Spatial extent of forecast", className="subtitle is-4")]
+    children=[forecast_temporal_start, forecast_temporal_end],
+    className="temporal-daterange",
 )
 
 forecast_theme_control = wrap_in_field(
@@ -333,6 +346,7 @@ center_column = [
     ),
     forecast_theme_control,
     forecast_bbox_fields,
+    html.Div(id="forecast-daterange-validation", className="validation", children=[]),
     forecast_temporal_daterange,
 ]
 
@@ -343,6 +357,7 @@ left_column = [
         className="content is-size-6",
     ),
     analog_bbox_fields,
+    html.Div(id="analog-daterange-validation", className="validation", children=[]),
     analog_temporal_daterange,
     num_of_analogs,
     method_weight_auto_weight,
@@ -363,12 +378,16 @@ Clicking the button below will open a new window that will run the analog foreca
 """,
         className="content is-size-6",
     ),
-    html.A(
+    html.Div(id="submit-validation", className="validation", children=[]),
+    html.Button(
         "Run analog forecast",
         id="api-button",
-        href="#",
         className="button is-primary",
-        target="_blank",
+        disabled=False,
+        type="submit",
+        formTarget="_blank",
+        formAction="#",
+        formMethod="GET"
     ),
 ]
 
