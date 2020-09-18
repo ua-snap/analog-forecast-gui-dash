@@ -419,11 +419,21 @@ about_data = wrap_in_section(
 <h3 class="title is-4">Data source</h3>
 <p>The data comes from the NCEI/NCAR R1 reanalysis. Although now superseded by more modern reanalysis, R1 is used because it offers the longest period of record (since 1949) and is kept up to date.</p>
 
-<h3 class="title is-4">What algorithm is used?</h3>
+<h3 class="title is-4">How does this tool work?</h3>
 
-<p>The criterion for the selection of the analogs is the closeness of the match to the present atmospheric conditions over the area selected by the user.  The metric of the closeness of fit is the root-mean-square difference (current state minus analog candidate) of the predictor variables summed over all grid points in the user-selected area of the predictor variables.</p>
+<p>First, a search area and time is defined. Data are available for entire months so the time can be defined as a single month (ie: August 2020) or a month range (ie: June through August 2020). The spatial bounds should be an area the user believes is climatologically predictive of the intended forecast area. The default is a region in the Pacific Ocean near the equator which climatologists have determined to be highly correlated with weather in Alaska.</p>
+<p>Second, the model will compare the search range and area to other years’ data to find the closest matches. This is done by comparing the climate pattern across six variables in the search area to those patterns in the same area during the same period in past years. Root mean squared error (RMSE) between each past year and the search period is performed by grid cell and then weighted across each variable using an auto-weighting calculation. The sum of the weighted mean squared errors across all variables is the “Match Score” with low match scores corresponding to high levels of similarity between that year and the search year. The top five years by match score are displayed by default.</p>
+<p>Third, a forecast area and time must be defined. Similar to the search area, data are available for entire months or month periods, and a forecast area should be chosen which the user believes to be highly correlated with past conditions in the search area. The default is a region over the state of Alaska which climatologists have determined to be highly correlated with conditions in the default search area over the Pacific Ocean.</p>
+<p>Fourth, climate conditions in the forecast area during the forecast period are returned for each of the top five years by match score calculated during step 2. These display what the climate conditions looked like in the forecast area when conditions in the search area were similar to conditions during the search period.</p>
+<p>Finally, the conditions returned during the top five match years in the forecast area are averaged to produce a composite forecast for the forecast period. This is a prediction of what climate conditions may look like in the forecast area during the forecast period based on conditions in the search area, during the search period.</p>
+<div class="diagram">
+<img src="{path_prefix}assets/explainer.svg"/>
+</div>
+<h4 class="title is-5">Auto&ndash;weighting process</h4>
+<p>The Root Mean Squared Error is computed for each variable and each year, which is then weighted for each variable according to the predictive power of that variable for the parameters input. The weight for each variable is determined by an algorithm developed by the tool’s initial developer Brian Brettschneider.  For each of the 5 variables a standard anomaly transformation is conducted with all values having 5.0 subtracted from them to retain the distinction between positive and negative values. RMSE with climatology is then conducted for each variable and eventually pattern match scores (RMSEs) of the forecast area compared to climatology are then built.</p>
+<p>The relationship between each of the six constituent variables can then be compared to the dependent variable of the forecast area RMEs. A multiple linear regression determines the weighting of each variable with positive and negative values possible. That weight is then used as the coefficient for each RMSE value for each variable to get coefficient-adjusted root mean squared error values, or weighted RMSEs. It is this sum of weighted RMSEs which acts as the Match Score for each year.</p>
 
-<h3 class="title is-4">Credits & source code</h3>
+<h3 class="title is-4">Credits &amp; source code</h3>
 
 <p>Brian Brettschneider with the <a href="https://uaf-accap.org">Alaska Center for Climate Assessment and Policy</a> (ACCAP) developed the science and code for this tool.  Brian now works with the National Weather Service, Anchorage.</p>
 
