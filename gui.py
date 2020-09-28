@@ -97,7 +97,7 @@ about = wrap_in_section(
             f"""
 <h1 class="title is-3">{luts.title}</h1>
 
-<p>This tool uses current atmospheric and sea surface temperature to identify the five best historical matches (analogs) as far back as 1949.  The analog identification is based on up to six variables from a current atmospheric reanalysis: surface air temperature, sea level pressure, precipitation, upper-air pressure (geopotential height), upper-air temperature, and sea surface temperature.</p>
+<p>This tool uses current atmospheric and sea surface temperature to identify the five best historical matches (analogs) as far back as 1949.  The analog identification is based on six variables from a current atmospheric reanalysis: surface air temperature, sea level pressure, precipitation, upper&ndash;air pressure (geopotential height), upper&ndash;air temperature, and sea surface temperature.</p>
 <p>The tool then provides a forecast based on how the weather patterns evolved in those analog years.  The forecasts are for 1 to 12 months into the future.  Users specify the areas from which the analogs are determined.  The areas can include the Arctic, middle latitudes, and even tropics, where ocean temperatures and pressures correlate with future weather over large parts of the Northern Hemisphere. The area covered by the forecast is also selected by the user, and it can be different from the area of the predictors.</p>
 <p><strong>This tool is designed for trained professionals and others with experience in the use of climate data for planning.</strong>  It can also be used by broader audiences who are familiar with atmospheric data and who understand the limitations of the analog method of forecasting.</p>
 <p>Date ranges can be chosen with the popup calendar <strong>or by typing in the boxes directly</strong>.  Only month/year is used for analysis purposes.</p>
@@ -372,12 +372,12 @@ left_column = [
 
 right_column = [
     html.H5("Run analog forecast", className="title is-5"),
-    html.P(
-        """
-Clicking the button below will open a new window that will run the analog forecast.  It may take a few minutes for the results to be available.
-""",
-        className="content is-size-6",
-    ),
+    ddsih.DangerouslySetInnerHTML("""
+<div class="launch-notes content is-size-6">
+    <p>Clicking the button below will open a new window that will run the analog forecast.</p>
+    <p>⚠️ <strong>It may take up to three minutes for the results to be available.</strong>  Leave the window open until the processes completes.</p>
+</div>
+    """),
     html.Div(id="submit-validation", className="validation", children=[]),
     html.Button(
         "Run analog forecast",

@@ -134,6 +134,10 @@ h5.subtitle.is-5 {
   padding: 0 1rem 2rem 2rem;
 }
 
+div.launch-notes {
+  margin-bottom: 2rem;
+}
+
 div.diagram {
   padding-top: 2rem;
   margin-bottom: 2rem;
