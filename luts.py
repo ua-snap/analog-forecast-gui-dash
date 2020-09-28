@@ -8,8 +8,9 @@ from dateutil.relativedelta import relativedelta
 
 title = "Analog Forecast Tool"
 url = "http://snap.uaf.edu/tools/demo"
-preview = "http://snap.uaf.edu/tools/demo/assets/preview.png"
-description = "Run an analog forecast tool to see future forecasts from past data."
+path_prefix = os.getenv("REQUESTS_PATHNAME_PREFIX") or "/"
+preview = path_prefix + "assets/preview.png"
+description = "The Analog forecast tool enables users to use the state of the climate in one time and area in the past to develop a forecast for a different time and area in the future. The user defines a search area and time and the tool finds years in the past where conditions were most similar. The top 5 match years are then used to find conditions in the forecast area in those years during the forecast time, and a composite of those results is automatically produced."
 
 # Customize this layout to include Google Analytics
 # and opengraph tags
