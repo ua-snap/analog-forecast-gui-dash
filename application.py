@@ -54,7 +54,16 @@ def toggle_manual_weights_form(method):
     [Input("analog-start-month", "value"), Input("analog-start-year", "value"),],
 )
 def update_analog_start_date(month, year):
-    return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
+    ctx = dash.callback_context
+    # If the user is loading the page for the first time,
+    # ensure that proper values are selected for the valid
+    # date ranges available.  (See the notes in gui.py about
+    # the date controls for more info)
+    if not ctx.triggered:
+        analog_start_default, analog_end_default = luts.get_default_analog_daterange()
+        return analog_start_default.strftime("%Y-%m-%d")
+    else:
+        return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
 
 
 @app.callback(
@@ -62,7 +71,14 @@ def update_analog_start_date(month, year):
     [Input("analog-end-month", "value"), Input("analog-end-year", "value"),],
 )
 def update_analog_end_date(month, year):
-    return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
+    ctx = dash.callback_context
+    # See above.  Update the end date for analog search range 
+    # upon first page load.
+    if not ctx.triggered:
+        analog_start_default, analog_end_default = luts.get_default_analog_daterange()
+        return analog_end_default.strftime("%Y-%m-%d")
+    else:
+        return datetime(month=month, year=year, day=1).strftime("%Y-%m-%d")
 
 
 @app.callback(

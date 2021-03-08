@@ -109,26 +109,36 @@ pressure_levels = {1: "925mb", 5: "500mb", 9: "200mb"}
 
 months = {i: datetime(2020, i, 1).strftime("%B") for i in range(1, 13)}
 
+
+def get_default_analog_daterange():
+    """
+    Data are SOMETIMES available after the 10th each month.
+    So, until then, the most-current-available-month is
+    the prior month.
+
+    Known issue is that the datasets can lag by more than 3 months, 
+    causing the processing API to crash when NCL is invoked.
+
+    Not much we can do about this.
+    """
+    current_date = datetime.now()
+    if current_date.day > 10:
+        analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
+        analog_end_default = current_date.replace(day=2) - relativedelta(months=2)
+    else:
+        analog_start_default = current_date.replace(day=1) - relativedelta(months=5)
+        analog_end_default = current_date.replace(day=2) - relativedelta(months=3)
+    return analog_start_default, analog_end_default
+
+
+# Set the analog end year to be the effectively-computed end year
+analog_start_default, analog_end_default = get_default_analog_daterange()
+
 analog_years = []
-for i in range(1949, datetime.now().year + 1):
+for i in range(1949, analog_end_default.year + 1):
     analog_years.append(i)
 
 # This and next year.
 forecast_years = []
 for i in range(1949, datetime.now().year + 2):
     forecast_years.append(i)
-
-def get_default_analog_daterange():
-    """
-    Data are available after the 10th each month.
-    So, until then, the most-current-available-month is
-    the prior month.
-    """
-    current_date = datetime.now()
-    if current_date.day > 10:
-        analog_start_default = current_date.replace(day=1) - relativedelta(months=3)
-        analog_end_default = current_date.replace(day=2) - relativedelta(months=1)
-    else:
-        analog_start_default = current_date.replace(day=1) - relativedelta(months=4)
-        analog_end_default = current_date.replace(day=2) - relativedelta(months=2)
-    return analog_start_default, analog_end_default
