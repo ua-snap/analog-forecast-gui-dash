@@ -14,7 +14,12 @@ import luts
 # Used in some fields & copyright date
 current_year = datetime.now().year
 
-# Compute default date ranges.
+# Compute default date ranges.  Note, these default date ranges
+# only update when the Flask code is run, so these get stale
+# when the code is running on Elastic Beanstalk.  In the app.py,
+# we force-update the fields upon page load by checking
+# if the context of the load is from a user trigger (manual change)
+# or not.
 current_date = datetime.now()
 analog_start_default, analog_end_default = luts.get_default_analog_daterange()
 forecast_end_default = current_date + relativedelta(months=2)
